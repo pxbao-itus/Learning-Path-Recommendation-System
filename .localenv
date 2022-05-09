@@ -1,0 +1,5 @@
+DOMAIN=example.org
+USERNAME=neo4j
+PASSWORD=neo4j
+ADMIN_EMAIL=admin@${DOMAIN}
+ROOT_URL=${DOMAIN}/app
