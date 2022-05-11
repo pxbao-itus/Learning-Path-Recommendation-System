@@ -19,7 +19,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Connection for neo4j
-config.DATABASE_URL = 'bolt://' + os.getenv('USERNAME') + ":" + os.getenv('PASSWORD') + "@" + os.getenv('URL')
+#config.DATABASE_URL = 'bolt://' + os.getenv('USERNAME') + ":" + os.getenv('PASSWORD') + "@" + os.getenv('URL')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apis.apps.ApisConfig',
 ]
 
 MIDDLEWARE = [
@@ -78,9 +79,13 @@ WSGI_APPLICATION = 'RecommendationSystem.wsgi.application'
 
 DATABASES = {
     'default': {
+        'NAME': 'db.sqlite3',
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'USER': 'neo4h',
+        'PASSWORD': 'fit@hcmus',
+        'PORT': '7687',
+        'HOST': 'localhost'
+    },
 }
 
 # Password validation
@@ -120,4 +125,4 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.Neo4j_Connection.BigAutoField'
