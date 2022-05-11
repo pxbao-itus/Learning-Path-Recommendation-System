@@ -3,7 +3,7 @@ import os
 from email.policy import default
 from enum import unique
 import json
-# from django.db import Neo4j_Connection
+# from django.db import neo4j_connection
 from os import name
 import math
 from dotenv import load_dotenv
@@ -17,7 +17,7 @@ import pandas as pd
 # from neomodel import config
 from neomodel import Q, db
 # config.DATABASE_URL ='bolt://neo4j:1@localhost:7687'
-# Create your Neo4j_Connection here.
+# Create your neo4j_connection here.
 from neomodel import StructuredNode, StringProperty, DateProperty, RelationshipTo, RelationshipFrom, FloatProperty
 from neomodel import StructuredRel
 import random
@@ -310,6 +310,12 @@ class Career(StructuredNode):
             "industry": map(lambda n: n.to_json(), self.industry),
         }
 
+    def to_json_1(self):
+        return {
+            "id": self.id,
+            "creTitle": self.creTitle,
+        }
+
     def export(self):
         return {
             "id": self.id,
@@ -371,6 +377,18 @@ class Program(StructuredNode):
     framework = RelationshipTo("Framework", "HAS_FRAMEWORK")
 
     def to_json(self):
+        return {
+            "id": self.id,
+            "proName": self.proName,
+            "course": list(map(lambda n: n.to_json(), self.course)),
+            "knowledge": list(map(lambda n: n.to_json(), self.knowledge)),
+            "platform": list(map(lambda n: n.to_json(), self.platform)),
+            "tool": list(map(lambda n: n.to_json(), self.tool)),
+            "programinglanguage": list(map(lambda n: n.to_json(), self.programinglanguage)),
+            "framework": list(map(lambda n: n.to_json(), self.framework)),
+        }
+
+    def to_json_1(self):
         return {
             "id": self.id,
             "proName": self.proName,
