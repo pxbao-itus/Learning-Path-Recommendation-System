@@ -1,15 +1,12 @@
-from concurrent.futures.thread import ThreadPoolExecutor
+import itertools
 
+from concurrent.futures.thread import ThreadPoolExecutor
 from py2neo import Graph
 
 from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
 
 graph = Graph()
-
-
-# print(graph.run(
-#     'match (u:User{name:"Bob"})-[r]->(lo) where type(r) =~"NE.*"return r.Level as level, lo.value as value').data())
 
 
 # get list LO that user need
@@ -20,7 +17,10 @@ def get_user_lo_need(user_id):
 # checking lo belong or not a set lo
 def is_lo_belong_set_lo(set_lo, lo_dict):
     for lo in set_lo:
-        if lo.get('id') == lo_dict.get('id') and lo.get('level') >= lo_dict.get('level'):
+        if lo.get('id') == lo_dict.get('id') \
+                and lo.get('level') is not None \
+                and lo_dict.get('level') is not None \
+                and lo.get('level') >= lo_dict.get('level'):
             return True
         else:
             continue
@@ -29,7 +29,9 @@ def is_lo_belong_set_lo(set_lo, lo_dict):
 
 def is_inside_set_lo(set_lo, lo_dict):
     for lo in set_lo:
-        if lo.get('id') == lo_dict.get('id'):
+        if lo.get('id') == lo_dict.get('id') \
+                and lo.get('level') is not None \
+                and lo_dict.get('level') is not None:
             return True
         else:
             continue
@@ -155,4 +157,55 @@ def get_set_candidate_for_all_lo(user_id):
     return list_courses_all_lo
 
 
-print(get_set_candidate_for_all_lo(4248))
+# calculate similarity between a user and a course
+def calculate_similarity_per_node(user_id, course_id):
+    return graph.run(query_calculate_similarity_jaccard(user_id, course_id)).data()[0].get('similarity')
+
+
+# function for determine attribute similarity for sort in list
+def for_sort(e):
+    return e['similarity']
+
+
+# function for remove element None in list
+def filter_list_not_none(list_need_filtering):
+    return [e for e in list_need_filtering if e not in [None]]
+
+
+# reduce set candidate courses by get top n element hava higher similarity
+def get_top_candidate_courses_of_a_lo(user_id, course_lo):
+    if course_lo.__len__() < 3:
+        return course_lo
+
+    for course in course_lo:
+        course['similarity'] = calculate_similarity_per_node(user_id, course.get('id'))
+    course_lo.sort(key=for_sort, reverse=True)
+
+    for course in course_lo:
+        course.pop('similarity')
+    top_2_course = [course_lo[0].copy(), course_lo[1].copy()]
+    return top_2_course
+
+
+# transfer raw list to list is filtered by similarity
+def get_input_for_step2(user_id):
+    sets_courses = []
+    list_course_per_lo = get_set_candidate_for_all_lo(user_id)
+
+    list_course_per_lo = filter_list_not_none(list_course_per_lo)
+    list_candidates_filtered = []
+
+    for set_courses in list_course_per_lo:
+        list_candidates_filtered.append(get_top_candidate_courses_of_a_lo(user_id, set_courses))
+
+    for set_courses in itertools.product(*list_candidates_filtered):
+        sets_courses.append(set_courses)
+
+    print(sets_courses.__len__())
+
+
+import time
+
+start_time = time.time()
+get_input_for_step2(4248)
+print("--- %s seconds ---" % (time.time() - start_time))
