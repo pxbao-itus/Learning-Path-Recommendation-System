@@ -1,6 +1,5 @@
-
 class AlgorithmConstant:
-    alpha = 1
-    beta = 1
-    lambda_ = 1
-    denta = 1
+    ALPHA = 1
+    BETA = 1
+    LAMBDA = 1
+    DELTA = 5
