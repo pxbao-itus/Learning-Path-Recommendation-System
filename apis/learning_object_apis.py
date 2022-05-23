@@ -1,11 +1,8 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 
 # Create your views here.
-from neomodel import db
 
-from neo4j_connection.models import ProgramingLanguage
-from services import career_service, learning_object_service
+from services import learning_object_service
 
 
 # API for Learning Object for user
