@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apis.apps.ApisConfig',
-    'neo4j_connection.apps.ModelsConfig',
-    # 'rest_framework',
 ]
 
 MIDDLEWARE = [

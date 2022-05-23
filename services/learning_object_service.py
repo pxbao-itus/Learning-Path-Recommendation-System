@@ -1,6 +1,6 @@
 from neomodel import db
 
-from neo4j_connection.models import ProgramingLanguage, Knowledge, Framework, Platform, Tool
+from models.models import ProgramingLanguage, Knowledge, Framework, Platform, Tool
 
 
 def get_all_programing_language():

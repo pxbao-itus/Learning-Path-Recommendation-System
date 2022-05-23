@@ -6,7 +6,7 @@ urlpatterns = [
     # Path for Career
     path('career/', career_apis.get_all_career),
     path('career/id', career_apis.get_career_by_id),
-    path('career/language', learning_object_apis.get_language_by_career),
+    # path('career/language', learning_object_apis.get_language_by_career),
 
     # Path for Learning Object
     path('lo/language/', learning_object_apis.get_all_programing_language),

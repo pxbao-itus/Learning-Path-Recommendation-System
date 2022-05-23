@@ -1,11 +1,7 @@
-import json
-
-from django.http import HttpResponse, JsonResponse, HttpRequest
+from django.http import JsonResponse
 
 # Create your views here.
-from rest_framework.viewsets import ViewSet
 
-from neo4j_connection.models import Career
 from services import career_service
 
 
