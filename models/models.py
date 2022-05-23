@@ -1,14 +1,10 @@
-# Tao model
 import os
 from email.policy import default
 from enum import unique
 import json
-# from django.db import neo4j_connection
 from os import name
 import math
-from dotenv import load_dotenv
 
-load_dotenv()
 # from io import BytesIO
 # from PIL import Image
 # from neo4j import GraphDatabase
@@ -20,10 +16,8 @@ from neomodel import Q, db
 # Create your neo4j_connection here.
 from neomodel import StructuredNode, StringProperty, DateProperty, RelationshipTo, RelationshipFrom, FloatProperty
 from neomodel import StructuredRel
-import random
 
 # Tao connection
-db.set_connection('bolt://' + os.getenv('USERNAME') + ":" + os.getenv('PASSWORD') + "@" + os.getenv('URL'))
 
 
 #########################################################################

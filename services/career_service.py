@@ -1,6 +1,4 @@
-from neomodel import db, StructuredNode, StringProperty, IntegerProperty
-
-from neo4j_connection.models import Career
+from models.models import Career
 
 all_career = Career.nodes.all()
 
