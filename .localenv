@@ -1,3 +1,4 @@
+SCHEME=bolt://
 URL=example.org
 USERNAME=neo4j
 PASSWORD=neo4j
