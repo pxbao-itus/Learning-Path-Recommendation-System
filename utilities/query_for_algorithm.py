@@ -1,9 +1,16 @@
 # queries for algorithm step 1
 
-# get set course that user need
+# get set lo that user need
 def query_get_user_need_lo(user_id):
     return f"MATCH (u:User)-[r]->(k) " \
            f"WHERE ID(u) = {user_id} AND TYPE(r) =~ 'NEED_.*' " \
+           f"RETURN id(k) as id, r.Level as level;"
+
+
+# get set lo that user has and need
+def query_get_user_lo(user_id):
+    return f"MATCH (u:User)-[r]->(k) " \
+           f"WHERE ID(u) = {user_id} AND (TYPE(r) =~ 'NEED_.*' OR TYPE(r) =~'HAS_.*') AND TYPE(r) <> 'HAS_OBJECTIVE' " \
            f"RETURN id(k) as id, r.Level as level;"
 
 
