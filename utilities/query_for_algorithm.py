@@ -66,3 +66,4 @@ def query_get_lo_user_has(user_id):
     return 'MATCH (u:User)-[ru]->(m) ' \
            f'where id(u) = {user_id} and type(ru) =~ "HAS_.*" and type(ru) <> "HAS_OBJECTIVE"' \
            'RETURN id(m) AS id_lo, ru.Level AS level'
+

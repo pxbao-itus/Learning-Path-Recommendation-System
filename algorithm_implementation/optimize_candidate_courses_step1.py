@@ -165,11 +165,11 @@ def get_set_candidate_for_all_lo(user_id):
 
 # calculate similarity between a user and a course
 def calculate_similarity_per_node_jaccard(user_id, course_id):
-    return graph.run(query_calculate_similarity_jaccard(user_id, course_id)).data()[0].get('similarity')
+    return graph.run(query_calculate_similarity_jaccard(user_id, course_id)).data()[0]['similarity']
 
 
 def calculate_similarity_per_node_overlap(user_id, course_id):
-    return graph.run(query_calculate_similarity_overlap(user_id, course_id)).data()[0].get('similarity')
+    return graph.run(query_calculate_similarity_overlap(user_id, course_id)).data()[0]['similarity']
 
 
 # function for determine attribute similarity for sort in list
@@ -184,17 +184,23 @@ def filter_list_not_none(list_need_filtering):
 
 # reduce set candidate courses by get top n element hava higher similarity
 def get_top_candidate_courses_of_a_lo(user_id, course_lo):
-    if course_lo.__len__() < 3:
+    if course_lo.__len__() < AlgorithmConstant.MUY:
         return course_lo
 
     for course in course_lo:
-        course['similarity'] = calculate_similarity_per_node_jaccard(user_id, course.get('id'))
+        course['similarity'] = calculate_similarity_per_node_overlap(user_id, course.get('id'))
     course_lo.sort(key=for_sort, reverse=True)
 
+    top_muy_course = []
+    counter = 0
     for course in course_lo:
         course.pop('similarity')
-    top_2_course = [course_lo[0], course_lo[1], course_lo[2]]
-    return top_2_course
+        if counter < AlgorithmConstant.MUY:
+            counter += 1
+            top_muy_course.append(course)
+        else:
+            break
+    return top_muy_course
 
 
 # transfer raw list to list is filtered by similarity
@@ -205,28 +211,32 @@ def get_input_for_step2(user_id):
     list_course_per_lo = filter_list_not_none(list_course_per_lo)
     list_candidates_filtered = []
 
+    # Lấy ra top các Course ứng viên trong tập Course ứng viên cho từng LO
     for set_courses in list_course_per_lo:
         list_candidates_filtered.append(get_top_candidate_courses_of_a_lo(user_id, set_courses))
 
-    # for set_courses in itertools.product(*list_candidates_filtered):
-    #     sets_courses.append(set_courses)
-    #
-    # print(sets_courses)
-    # print(list_candidates_filtered)
-    return list_candidates_filtered
+    # Tạo các tích Descartes từ các tập Course ứng viên
+    for set_courses in itertools.product(*list_candidates_filtered):
+        sets_courses.append(set_courses)
+
+
+    return sets_courses
 
 
 import time
 
 start_time = time.time()
 # get_input_for_step2(4248)
-#get_input_for_step2(4248)
+# get_input_for_step2(4248)
 abc = get_input_for_step2(4248)
-string = "Match (u:User{name:'Bob'})-[r]->(k)<-[r2]-(c:Course) Where type(r) =~ 'NEED_.*' and" \
-         " type(r2) =~'TEACH_.*' and ("
 for i in abc:
-    for j in i:
-        string += f" id(c)={j.get('id')} OR "
-string += f" id(c) = {abc[0][0].get('id')}) return u, k, c"
-print(string)
+
+    print(i)
+# string = "Match (u:User{name:'Bob'})-[r]->(k)<-[r2]-(c:Course) Where type(r) =~ 'NEED_.*' and" \
+#          " type(r2) =~'TEACH_.*' and ("
+# for i in abc:
+#     for j in i:
+#         string += f" id(c)={j.get('id')} OR "
+# string += f" id(c) = {abc[0][0].get('id')}) return u, k, c"
+# print(string)
 print("--- %s seconds ---" % (time.time() - start_time))
