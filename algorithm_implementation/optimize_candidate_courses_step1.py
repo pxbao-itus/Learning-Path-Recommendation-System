@@ -14,6 +14,11 @@ def get_user_lo_need(user_id):
     return graph.run(query_get_user_need_lo(user_id)).data()
 
 
+# get list LO that user has and need
+def get_user_lo(user_id):
+    return graph.run(query_get_user_lo(user_id)).data()
+
+
 # checking lo belong or not a set lo
 def is_lo_belong_set_lo(set_lo, lo_dict):
     for lo in set_lo:
@@ -115,13 +120,13 @@ def is_rating_for_course_greater_than_lambda(course_id):
 
 
 # checking for a course that satisfy criteria provide by user
-def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, criteria):
+def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteria):
     list_lo_provided_by_course = graph.run(query_get_lo_provided_by_course(course_id)).data()
 
     switcher = {
         1: is_course_provided_more_than_one_lo(list_lo_provided_by_course, lo_dict, user_lo_need),
-        2: is_require_lo_of_course_belonged(course_id, user_lo_need),
-        3: is_output_lo_of_course_less_or_equal_than_delta(user_lo_need, list_lo_provided_by_course),
+        2: is_require_lo_of_course_belonged(course_id, user_lo),
+        3: is_output_lo_of_course_less_or_equal_than_delta(user_lo, list_lo_provided_by_course),
         4: is_input_lo_of_course_outside_less_or_equal_than_alpha(course_id, user_lo_need),
         5: is_amount_level_redundancy_less_than_beta(lo_dict, list_lo_provided_by_course),
         6: is_rating_for_course_greater_than_lambda(course_id)
@@ -130,12 +135,12 @@ def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, criteria):
 
 
 # get candidate courses for a lo
-def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need):
+def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo):
     course_lo = graph.run(query_get_courses_provided_a_lo(lo_dict.get('id'))).data()
     list_course_lo = []
     for i in range(7):
         for course in course_lo:
-            if is_candidate_courses_a_LO(course.get('id'), lo_dict, user_lo_need, i + 1):
+            if is_candidate_courses_a_LO(course.get('id'), lo_dict, user_lo_need, user_lo, i + 1):
                 list_course_lo.append(course)
         if list_course_lo.__len__() > 0:
             return list_course_lo
@@ -146,11 +151,12 @@ def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need):
 # get all candidate courses for all lo
 def get_set_candidate_for_all_lo(user_id):
     user_lo_need = get_user_lo_need(user_id)
+    user_lo = get_user_lo(user_id)
     list_courses_all_lo = []
     list_future_for_thread = []
     executor = ThreadPoolExecutor(user_lo_need.__len__())
     for lo in user_lo_need:
-        list_future_for_thread.append(executor.submit(get_list_candidate_courses_for_a_lo, lo, user_lo_need))
+        list_future_for_thread.append(executor.submit(get_list_candidate_courses_for_a_lo, lo, user_lo_need, user_lo))
     executor.shutdown()
     for future in list_future_for_thread:
         list_courses_all_lo.append(future.result())
@@ -207,5 +213,14 @@ def get_input_for_step2(user_id):
 import time
 
 start_time = time.time()
-get_input_for_step2(4248)
+# get_input_for_step2(4248)
+print(filter_list_not_none(get_set_candidate_for_all_lo(4248)))
+abc = filter_list_not_none(get_set_candidate_for_all_lo(4248))
+string = "Match (u:User{name:'Bob'})-[r]->(k)<-[r2]-(c:Course) Where type(r) =~ 'NEED_.*' and" \
+         " type(r2) =~'TEACH_.*' and ("
+for i in abc:
+    for j in i:
+        string += f" id(c)={j.get('id')} OR "
+string += f" id(c) = {abc[0][0].get('id')}) return u, k, c"
+print(string)
 print("--- %s seconds ---" % (time.time() - start_time))
