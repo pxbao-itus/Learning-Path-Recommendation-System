@@ -164,8 +164,12 @@ def get_set_candidate_for_all_lo(user_id):
 
 
 # calculate similarity between a user and a course
-def calculate_similarity_per_node(user_id, course_id):
+def calculate_similarity_per_node_jaccard(user_id, course_id):
     return graph.run(query_calculate_similarity_jaccard(user_id, course_id)).data()[0].get('similarity')
+
+
+def calculate_similarity_per_node_overlap(user_id, course_id):
+    return graph.run(query_calculate_similarity_overlap(user_id, course_id)).data()[0].get('similarity')
 
 
 # function for determine attribute similarity for sort in list
@@ -184,12 +188,12 @@ def get_top_candidate_courses_of_a_lo(user_id, course_lo):
         return course_lo
 
     for course in course_lo:
-        course['similarity'] = calculate_similarity_per_node(user_id, course.get('id'))
+        course['similarity'] = calculate_similarity_per_node_jaccard(user_id, course.get('id'))
     course_lo.sort(key=for_sort, reverse=True)
 
     for course in course_lo:
         course.pop('similarity')
-    top_2_course = [course_lo[0].copy(), course_lo[1].copy()]
+    top_2_course = [course_lo[0], course_lo[1], course_lo[2]]
     return top_2_course
 
 
@@ -204,18 +208,20 @@ def get_input_for_step2(user_id):
     for set_courses in list_course_per_lo:
         list_candidates_filtered.append(get_top_candidate_courses_of_a_lo(user_id, set_courses))
 
-    for set_courses in itertools.product(*list_candidates_filtered):
-        sets_courses.append(set_courses)
-
-    print(sets_courses.__len__())
+    # for set_courses in itertools.product(*list_candidates_filtered):
+    #     sets_courses.append(set_courses)
+    #
+    # print(sets_courses)
+    # print(list_candidates_filtered)
+    return list_candidates_filtered
 
 
 import time
 
 start_time = time.time()
 # get_input_for_step2(4248)
-print(filter_list_not_none(get_set_candidate_for_all_lo(4248)))
-abc = filter_list_not_none(get_set_candidate_for_all_lo(4248))
+#get_input_for_step2(4248)
+abc = get_input_for_step2(4248)
 string = "Match (u:User{name:'Bob'})-[r]->(k)<-[r2]-(c:Course) Where type(r) =~ 'NEED_.*' and" \
          " type(r2) =~'TEACH_.*' and ("
 for i in abc:
