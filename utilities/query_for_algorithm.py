@@ -57,3 +57,9 @@ def query_calculate_similarity_overlap(user_id, course_id):
            f'MATCH (p2:Course)-[rc]-(e2) WHERE type(rc) =~ "TEACH_.*" and id(p2) = {course_id}' \
            'WITH p1, p1entity_type, p2, collect(id(e2)) AS p2entity_type' \
            'RETURN gds.similarity.overlap(p1entity_type, p2entity_type) AS similarity'
+#Query to get set of lo that user has
+def query_get_lo_user_has(user_id):
+    return 'MATCH (u:User)-[ru]->(m) ' \
+            f'where id(u) = {user_id} and type(ru) =~ "HAS_.*" and type(ru) <> "HAS_OBJECTIVE"' \
+            'RETURN id(m) AS id_lo, ru.Level AS level'
+        
