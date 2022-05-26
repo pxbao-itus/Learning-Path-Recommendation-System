@@ -22,24 +22,43 @@ def get_user_lo(user_id):
 # checking lo belong or not a set lo
 def is_lo_belong_set_lo(set_lo, lo_dict):
     for lo in set_lo:
-        if lo.get('id') == lo_dict.get('id') \
-                and lo.get('level') is not None \
-                and lo_dict.get('level') is not None \
-                and lo.get('level') >= lo_dict.get('level'):
-            return True
+        if type(lo) is list:
+            for sub_lo in lo:
+                if sub_lo.get('id') == lo_dict.get('id') \
+                        and sub_lo.get('level') is not None \
+                        and sub_lo.get('level') is not None \
+                        and sub_lo.get('level') >= lo_dict.get('level'):
+                    return True
+                else:
+                    continue
         else:
-            continue
+            if lo.get('id') == lo_dict.get('id') \
+                    and lo.get('level') is not None \
+                    and lo_dict.get('level') is not None \
+                    and lo.get('level') >= lo_dict.get('level'):
+                return True
+            else:
+                continue
     return False
 
 
 def is_inside_set_lo(set_lo, lo_dict):
     for lo in set_lo:
-        if lo.get('id') == lo_dict.get('id') \
-                and lo.get('level') is not None \
-                and lo_dict.get('level') is not None:
-            return True
+        if type(lo) is list:
+            for sub_lo in lo:
+                if sub_lo.get('id') == lo_dict.get('id') \
+                        and sub_lo.get('level') is not None \
+                        and sub_lo.get('level') is not None:
+                    return True
+                else:
+                    continue
         else:
-            continue
+            if lo.get('id') == lo_dict.get('id') \
+                    and lo.get('level') is not None \
+                    and lo_dict.get('level') is not None:
+                return True
+            else:
+                continue
     return False
 
 
@@ -102,7 +121,7 @@ def is_amount_level_redundancy_less_than_beta(lo_dict, list_lo_provided_by_cours
     for lo in list_lo_provided_by_course:
         if lo.get('id') == lo_dict.get('id'):
             amount = lo.get('level') - lo_dict.get('level')
-            break;
+            break
     if amount <= AlgorithmConstant.BETA:
         return True
     else:
@@ -122,7 +141,8 @@ def is_rating_for_course_greater_than_lambda(course_id):
 # checking for a course that satisfy criteria provide by user
 def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteria):
     list_lo_provided_by_course = graph.run(query_get_lo_provided_by_course(course_id)).data()
-
+    if lo_dict not in list_lo_provided_by_course:
+        return False
     switcher = {
         1: is_course_provided_more_than_one_lo(list_lo_provided_by_course, lo_dict, user_lo_need),
         2: is_require_lo_of_course_belonged(course_id, user_lo),
@@ -131,7 +151,7 @@ def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteri
         5: is_amount_level_redundancy_less_than_beta(lo_dict, list_lo_provided_by_course),
         6: is_rating_for_course_greater_than_lambda(course_id)
     }
-    return switcher.get(criteria, True)
+    return switcher.get(criteria, False)
 
 
 # get candidate courses for a lo
@@ -149,9 +169,7 @@ def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo):
 
 
 # get all candidate courses for all lo
-def get_set_candidate_for_all_lo(user_id):
-    user_lo_need = get_user_lo_need(user_id)
-    user_lo = get_user_lo(user_id)
+def get_set_candidate_for_all_lo(user_lo, user_lo_need):
     list_courses_all_lo = []
     list_future_for_thread = []
     executor = ThreadPoolExecutor(user_lo_need.__len__())
@@ -205,33 +223,34 @@ def get_top_candidate_courses_of_a_lo(user_id, course_lo):
 
 # transfer raw list to list is filtered by similarity
 def get_input_for_step2(user_id):
+    user_lo_need = get_user_lo_need(user_id)
+    user_lo = get_user_lo(user_id)
     sets_courses = []
-    list_course_per_lo = get_set_candidate_for_all_lo(user_id)
+    list_course_per_lo = get_set_candidate_for_all_lo(user_lo, user_lo_need)
 
     list_course_per_lo = filter_list_not_none(list_course_per_lo)
     list_candidates_filtered = []
 
-    # Lấy ra top các Course ứng viên trong tập Course ứng viên cho từng LO
     for set_courses in list_course_per_lo:
         list_candidates_filtered.append(get_top_candidate_courses_of_a_lo(user_id, set_courses))
 
-    # Tạo các tích Descartes từ các tập Course ứng viên
     for set_courses in itertools.product(*list_candidates_filtered):
         sets_courses.append(set_courses)
 
+    sets_courses_as_list = []
+    for i in sets_courses:
+        sets_courses_as_list.append(list(i))
 
-    return sets_courses
+    return sets_courses_as_list
 
-
-import time
-
-start_time = time.time()
+# import time
+#
+# start_time = time.time()
 # get_input_for_step2(4248)
-# get_input_for_step2(4248)
-abc = get_input_for_step2(4248)
-for i in abc:
-
-    print(i)
+# abc = get_input_for_step2(4248)
+#
+# print(abc.__len__())
+# print(abc)
 # string = "Match (u:User{name:'Bob'})-[r]->(k)<-[r2]-(c:Course) Where type(r) =~ 'NEED_.*' and" \
 #          " type(r2) =~'TEACH_.*' and ("
 # for i in abc:
@@ -239,4 +258,4 @@ for i in abc:
 #         string += f" id(c)={j.get('id')} OR "
 # string += f" id(c) = {abc[0][0].get('id')}) return u, k, c"
 # print(string)
-print("--- %s seconds ---" % (time.time() - start_time))
+# print("--- %s seconds ---" % (time.time() - start_time))

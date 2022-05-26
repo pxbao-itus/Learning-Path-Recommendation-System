@@ -1,5 +1,5 @@
 # queries for algorithm step 1
-
+# =========================STEP1=================================
 # get set lo that user need
 def query_get_user_need_lo(user_id):
     return f"MATCH (u:User)-[r]->(k) " \
@@ -55,10 +55,17 @@ def query_calculate_similarity_overlap(user_id, course_id):
     return 'MATCH (p1:User)-[ru]-(e1) ' \
            f' where type(ru) =~ "NEED_.*" and id(p1) = {user_id} ' \
            'WITH p1, collect(id(e1)) AS p1entity_type ' \
-           f'MATCH (p2:Course)-[rc]-(e2) WHERE type(rc) =~ "TEACH_.*" and id(p2) = {course_id}' \
+           f'MATCH (p2:Course)-[rc]-(e2) WHERE (type(rc) =~ "TEACH_.*" or type(rc) =~"REQUIRE_.*") and id(p2) = {course_id}' \
            f'  and type(rc) <> "TEACH_IN" ' \
            'WITH p1, p1entity_type, p2, collect(id(e2)) AS p2entity_type ' \
            'RETURN gds.similarity.overlap(p1entity_type, p2entity_type) AS similarity '
+
+
+# ===============================STEP 2==========================================
+def query_lo_require_a_course(course_id):
+    return 'MATCH (c:Course)-[r]->(lo) ' \
+           f'WHERE id(c)={course_id} AND TYPE(r)=~"REQUIRE_.*" ' \
+           'RETURN id(lo) AS id, r.Level AS level'
 
 
 # Query to get set of lo that user has
@@ -66,4 +73,3 @@ def query_get_lo_user_has(user_id):
     return 'MATCH (u:User)-[ru]->(m) ' \
            f'where id(u) = {user_id} and type(ru) =~ "HAS_.*" and type(ru) <> "HAS_OBJECTIVE"' \
            'RETURN id(m) AS id_lo, ru.Level AS level'
-
