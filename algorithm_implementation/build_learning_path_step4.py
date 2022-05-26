@@ -8,7 +8,8 @@ from py2neo import Graph
 
 graph = Graph()
 
-#Create sample data for test
+# data sample for test
+course_user_need_to_learn = [[1275,1393,2318,1884,1922,2919,4159,4277,3557,1905]]
 
 # Check if user can learn the course
 def user_can_learn(current_user_lo,course_id):
@@ -55,14 +56,18 @@ def update_user_has_lo(current_user_lo,course_id):
 
 # Create Learning Path for only set of course
 def create_LP(set_of_course,user_id):
+    i = 1
     learning_path = []
     user_has_lo = graph.run(query_get_lo_user_has(user_id)).data()
     while True:
         course_can_learn = find_courses_can_learn(set_of_course,user_has_lo)
         if not course_can_learn:
-            break;
+            break;  
         for course_id in course_can_learn:
             user_has_lo = update_user_has_lo(user_has_lo,course_id)
+            if i == 1:
+                print(user_has_lo)
+                i+=1
             set_of_course.pop(set_of_course.index(course_id))
             learning_path.append(course_id)
         if not set_of_course:
@@ -77,4 +82,7 @@ def finding_set_of_LP(all_of_course,user_id):
     for set_of_course in all_of_course:
         set_of_lp.append(create_LP(set_of_course,user_id))
     return set_of_lp
+
+# print(finding_set_of_LP(course_user_need_to_learn,4678))
+
 
