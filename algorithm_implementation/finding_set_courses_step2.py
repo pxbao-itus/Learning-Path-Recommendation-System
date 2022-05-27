@@ -93,20 +93,20 @@ def complete_set_course(sets_courses, user_id, user_course_extra, user_lo_requir
     if user_course_extra.__len__() > 0:
         user_course_extra.pop()
 
-import time
-
-start_time = time.time()
-total = []
-complete_set_course(optimize_candidate_courses_step1.get_input_for_step2(4248), 4248, [],
-                             [optimize_candidate_courses_step1.get_user_lo(4248)], [], total)
-deco_list = []
-for set_raw in total:
-    element = []
-    for e in set_raw:
-        element.extend(e)
-    # print(element)
-    deco_list.append(element.copy())
-# for i in deco_list:
-#     print(i)
-print(deco_list.__len__())
-print("--- %s seconds ---" % (time.time() - start_time))
+# import time
+#
+# start_time = time.time()
+# total = []
+# complete_set_course(optimize_candidate_courses_step1.get_input_for_step2(4248), 4248, [],
+#                              [optimize_candidate_courses_step1.get_user_lo(4248)], [], total)
+# deco_list = []
+# for set_raw in total:
+#     element = []
+#     for e in set_raw:
+#         element.extend(e)
+#     # print(element)
+#     deco_list.append(element.copy())
+# # for i in deco_list:
+# #     print(i)
+# print(deco_list.__len__())
+# print("--- %s seconds ---" % (time.time() - start_time))

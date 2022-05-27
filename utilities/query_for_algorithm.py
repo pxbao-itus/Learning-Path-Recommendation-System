@@ -68,6 +68,14 @@ def query_lo_require_a_course(course_id):
            'RETURN id(lo) AS id, r.Level AS level'
 
 
+def query_to_get_list_lo_provided_by_set_course(set_course_id, set_lo_id):
+    return f'with {set_course_id} as listCourse, {set_lo_id} as listLO  ' \
+           'match (lo)<-[r1]-(c:Course) ' \
+           f'where id(lo) in listLO and type(r)=~"NEED_.*" and type(r1)=~"TEACH_.*" and id(c) in listCourse ' \
+           'return id(lo) as id, r1.Level as level'
+
+
+# ================================STEP 4==========================================
 # Query to get set of lo that user has
 def query_get_lo_user_has(user_id):
     return 'MATCH (u:User)-[ru]->(m) ' \
