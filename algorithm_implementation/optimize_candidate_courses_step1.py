@@ -62,6 +62,17 @@ def is_inside_set_lo(set_lo, lo_dict):
     return False
 
 
+# checking for a course that is or not satisfy zero criteria
+def is_course_existed(course_id, user_course_extra):
+    for course in user_course_extra:
+        for inner_course in course:
+            if course_id == inner_course.get('id'):
+                return False
+            else:
+                continue
+    return True
+
+
 # checking for a course that is or not satisfy first criteria
 def is_course_provided_more_than_one_lo(list_lo, lo_dict, user_lo_need):
     result = False
@@ -139,11 +150,12 @@ def is_rating_for_course_greater_than_lambda(course_id):
 
 
 # checking for a course that satisfy criteria provide by user
-def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteria):
+def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteria, user_course_extra):
     list_lo_provided_by_course = graph.run(query_get_lo_provided_by_course(course_id)).data()
     if lo_dict not in list_lo_provided_by_course:
         return False
     switcher = {
+        0: is_course_existed(course_id, user_course_extra),
         1: is_course_provided_more_than_one_lo(list_lo_provided_by_course, lo_dict, user_lo_need),
         2: is_require_lo_of_course_belonged(course_id, user_lo),
         3: is_output_lo_of_course_less_or_equal_than_delta(user_lo, list_lo_provided_by_course),
@@ -155,12 +167,13 @@ def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteri
 
 
 # get candidate courses for a lo
-def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo):
+def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo, mode, user_course_extra):
     course_lo = graph.run(query_get_courses_provided_a_lo(lo_dict.get('id'))).data()
     list_course_lo = []
-    for i in range(7):
+
+    for i in range(7 - mode):
         for course in course_lo:
-            if is_candidate_courses_a_LO(course.get('id'), lo_dict, user_lo_need, user_lo, i + 1):
+            if is_candidate_courses_a_LO(course.get('id'), lo_dict, user_lo_need, user_lo, i + mode, user_course_extra):
                 list_course_lo.append(course)
         if list_course_lo.__len__() > 0:
             return list_course_lo
@@ -169,12 +182,13 @@ def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo):
 
 
 # get all candidate courses for all lo
-def get_set_candidate_for_all_lo(user_lo, user_lo_need):
+def get_set_candidate_for_all_lo(user_lo, user_lo_need, mode, user_course_extra):
     list_courses_all_lo = []
     list_future_for_thread = []
     executor = ThreadPoolExecutor(user_lo_need.__len__())
     for lo in user_lo_need:
-        list_future_for_thread.append(executor.submit(get_list_candidate_courses_for_a_lo, lo, user_lo_need, user_lo))
+        list_future_for_thread.append(
+            executor.submit(get_list_candidate_courses_for_a_lo, lo, user_lo_need, user_lo, mode, user_course_extra))
     executor.shutdown()
     for future in list_future_for_thread:
         list_courses_all_lo.append(future.result())
@@ -222,11 +236,11 @@ def get_top_candidate_courses_of_a_lo(user_id, course_lo):
 
 
 # transfer raw list to list is filtered by similarity
-def get_input_for_step2(user_id):
+def get_input_for_step2(user_id, mode, user_course_extra):
     user_lo_need = get_user_lo_need(user_id)
     user_lo = get_user_lo(user_id)
     sets_courses = []
-    list_course_per_lo = get_set_candidate_for_all_lo(user_lo, user_lo_need)
+    list_course_per_lo = get_set_candidate_for_all_lo(user_lo, user_lo_need, mode, user_course_extra)
 
     list_course_per_lo = filter_list_not_none(list_course_per_lo)
     list_candidates_filtered = []
@@ -243,13 +257,13 @@ def get_input_for_step2(user_id):
 
     return sets_courses_as_list
 
+
 # import time
 #
 # start_time = time.time()
 # get_input_for_step2(4248)
-# abc = get_input_for_step2(4248)
+# abc = get_input_for_step2(4248, 1, [])
 #
-# print(abc.__len__())
 # print(abc)
 # string = "Match (u:User{name:'Bob'})-[r]->(k)<-[r2]-(c:Course) Where type(r) =~ 'NEED_.*' and" \
 #          " type(r2) =~'TEACH_.*' and ("

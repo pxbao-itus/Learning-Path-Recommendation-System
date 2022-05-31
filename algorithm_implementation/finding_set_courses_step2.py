@@ -53,11 +53,27 @@ def get_user_lo_current_require(set_course, user_lo_require, user_lo_current_req
     return user_lo_current_require.copy()
 
 
+# create temporary relationship to calculate similarity
+def map_list_dict_to_list(dict):
+    return dict.get('id')
+
+
+def create_temporary_relationship(user_id, user_lo_current_require):
+    list_lo = list(map(map_list_dict_to_list, user_lo_current_require))
+    graph.run(query_to_create_temporary_relationship_user_lo(user_id, list_lo))
+
+
+def delete_temporary_relationship_created(user_id, user_lo_current_require):
+    list_lo = list(map(map_list_dict_to_list, user_lo_current_require))
+    graph.run(query_to_remove_temporary_relationship_created(user_id, list_lo))
+
+
 # create descartes set courses
-def make_descartes_set(user_id, user_lo_require, user_lo_current_require):
+def make_descartes_set(user_id, user_lo_require, user_lo_current_require, user_course_extra):
     sets_courses = []
     list_course_per_lo = optimize_candidate_courses_step1.get_set_candidate_for_all_lo(user_lo_require,
-                                                                                       user_lo_current_require)
+                                                                                       user_lo_current_require, 0,
+                                                                                       user_course_extra)
 
     list_course_per_lo = optimize_candidate_courses_step1.filter_list_not_none(list_course_per_lo)
     list_candidates_filtered = []
@@ -80,6 +96,7 @@ def complete_set_course(sets_courses, user_id, user_course_extra, user_lo_requir
     for set_course in sets_courses:
         user_course_extra.append(set_course.copy())
         user_lo_require.append(user_lo_current_require.copy())
+        delete_temporary_relationship_created(user_id, user_lo_current_require)
         user_lo_current_require.clear()
         user_lo_current_require = get_user_lo_current_require(set_course, user_lo_require, user_lo_current_require)
         if user_lo_current_require.__len__() == 0:
@@ -88,25 +105,31 @@ def complete_set_course(sets_courses, user_id, user_course_extra, user_lo_requir
             cde = user_lo_require.pop()
             continue
         else:
-            complete_set_course(make_descartes_set(user_id, user_lo_require, user_lo_current_require), user_id,
-                                user_course_extra, user_lo_require, user_lo_current_require, set_complete_course)
+            create_temporary_relationship(user_id, user_lo_current_require)
+            complete_set_course(
+                make_descartes_set(user_id, user_lo_require, user_lo_current_require, user_course_extra), user_id,
+                user_course_extra, user_lo_require, user_lo_current_require, set_complete_course)
     if user_course_extra.__len__() > 0:
         user_course_extra.pop()
 
-# import time
+
+def parse_for_step3_input(user_id):
+    total = []
+    complete_set_course(optimize_candidate_courses_step1.get_input_for_step2(user_id, 1, []), user_id, [],
+                        [optimize_candidate_courses_step1.get_user_lo(user_id)], [], total)
+    deco_list = []
+    for set_raw in total:
+        element = []
+        for e in set_raw:
+            element.extend(e)
+        deco_list.append(element.copy())
+    return deco_list
+
+
+import time
+
 #
-# start_time = time.time()
-# total = []
-# complete_set_course(optimize_candidate_courses_step1.get_input_for_step2(4248), 4248, [],
-#                              [optimize_candidate_courses_step1.get_user_lo(4248)], [], total)
-# deco_list = []
-# for set_raw in total:
-#     element = []
-#     for e in set_raw:
-#         element.extend(e)
-#     # print(element)
-#     deco_list.append(element.copy())
-# # for i in deco_list:
-# #     print(i)
-# print(deco_list.__len__())
-# print("--- %s seconds ---" % (time.time() - start_time))
+start_time = time.time()
+for i in parse_for_step3_input(4248):
+    print(i)
+print("--- %s seconds ---" % (time.time() - start_time))

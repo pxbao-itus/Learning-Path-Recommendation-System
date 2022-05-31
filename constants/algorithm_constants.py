@@ -3,4 +3,5 @@ class AlgorithmConstant:
     BETA = 1
     LAMBDA = 1
     DELTA = 1
-    MUY = 10
+    MUY = 2
+

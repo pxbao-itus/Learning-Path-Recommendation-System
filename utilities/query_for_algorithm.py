@@ -75,6 +75,18 @@ def query_to_get_list_lo_provided_by_set_course(set_course_id, set_lo_id):
            'return id(lo) as id, r1.Level as level'
 
 
+def query_to_create_temporary_relationship_user_lo(user_id, list_lo):
+    return f'WITH {list_lo} as list ' \
+           f'MATCH (a:User), (b) WHERE id(a)={user_id} AND id(b) in list ' \
+           'CREATE (a)-[r:TEM_RELATIONSHIP{Level:1}]->(b);'
+
+
+def query_to_remove_temporary_relationship_created(user_id, list_lo):
+    return f'WITH {list_lo} as list ' \
+           f'MATCH (a:User)-[r]-> (b) WHERE id(a)={user_id} AND id(b) in list ' \
+           'DELETE r'
+
+
 # ================================STEP 4==========================================
 # Query to get set of lo that user has
 def query_get_lo_user_has(user_id):
