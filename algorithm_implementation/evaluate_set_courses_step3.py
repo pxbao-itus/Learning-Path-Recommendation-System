@@ -100,4 +100,4 @@ def get_top_course_to_step_4(user_id):
     return set_course_returned
 
 
-print(get_top_course_to_step_4(4248))
+# print(get_top_course_to_step_4(4248))

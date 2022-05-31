@@ -258,4 +258,4 @@ def get_input_for_step2(user_id, mode, user_course_extra):
     return sets_courses_as_list
 
 
-print(get_input_for_step2(4248, 1, []))
+# print(get_input_for_step2(4248, 1, []))
