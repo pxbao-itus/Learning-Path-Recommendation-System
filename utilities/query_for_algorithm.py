@@ -68,10 +68,10 @@ def query_lo_require_a_course(course_id):
            'RETURN id(lo) AS id, r.Level AS level'
 
 
-def query_to_get_list_lo_provided_by_set_course(set_course_id, set_lo_id):
-    return f'with {set_course_id} as listCourse, {set_lo_id} as listLO  ' \
+def query_to_get_list_lo_provided_by_set_course(set_course_id):
+    return f'with {set_course_id} as listCourse ' \
            'match (lo)<-[r1]-(c:Course) ' \
-           f'where id(lo) in listLO and type(r)=~"NEED_.*" and type(r1)=~"TEACH_.*" and id(c) in listCourse ' \
+           f'where type(r1)=~"TEACH_.*" and id(c) in listCourse ' \
            'return id(lo) as id, r1.Level as level'
 
 
@@ -85,6 +85,27 @@ def query_to_remove_temporary_relationship_created(user_id, list_lo):
     return f'WITH {list_lo} as list ' \
            f'MATCH (a:User)-[r]-> (b) WHERE id(a)={user_id} AND id(b) in list ' \
            'DELETE r'
+
+
+def query_get_rating_set_course(set_course_id):
+    return f'WITH {set_course_id} as listCourse ' \
+           'MATCH (c:Course) ' \
+           'WHERE id(c) in listCourse ' \
+           'RETURN avg(c.crsRating) as avgRating '
+
+
+def query_get_sum_tuition_set_course(set_course_id):
+    return f'WITH {set_course_id} as listCourse ' \
+           'MATCH (c:Course) ' \
+           'WHERE id(c) in listCourse ' \
+           'RETURN sum(c.crsFee) as sumFee'
+
+
+def query_get_list_time_of_set_course(set_course_id):
+    return f'WITH {set_course_id} as listCourse ' \
+           'MATCH (c:Course) ' \
+           'WHERE id(c) in listCourse ' \
+           'RETURN c.crsTime as time '
 
 
 # ================================STEP 4==========================================

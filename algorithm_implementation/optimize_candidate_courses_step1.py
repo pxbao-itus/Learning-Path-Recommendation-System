@@ -258,18 +258,4 @@ def get_input_for_step2(user_id, mode, user_course_extra):
     return sets_courses_as_list
 
 
-# import time
-#
-# start_time = time.time()
-# get_input_for_step2(4248)
-# abc = get_input_for_step2(4248, 1, [])
-#
-# print(abc)
-# string = "Match (u:User{name:'Bob'})-[r]->(k)<-[r2]-(c:Course) Where type(r) =~ 'NEED_.*' and" \
-#          " type(r2) =~'TEACH_.*' and ("
-# for i in abc:
-#     for j in i:
-#         string += f" id(c)={j.get('id')} OR "
-# string += f" id(c) = {abc[0][0].get('id')}) return u, k, c"
-# print(string)
-# print("--- %s seconds ---" % (time.time() - start_time))
+print(get_input_for_step2(4248, 1, []))

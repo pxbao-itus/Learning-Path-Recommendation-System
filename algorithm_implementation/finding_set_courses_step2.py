@@ -117,19 +117,10 @@ def parse_for_step3_input(user_id):
     total = []
     complete_set_course(optimize_candidate_courses_step1.get_input_for_step2(user_id, 1, []), user_id, [],
                         [optimize_candidate_courses_step1.get_user_lo(user_id)], [], total)
-    deco_list = []
+    parse_list = []
     for set_raw in total:
         element = []
         for e in set_raw:
             element.extend(e)
-        deco_list.append(element.copy())
-    return deco_list
-
-
-import time
-
-#
-start_time = time.time()
-for i in parse_for_step3_input(4248):
-    print(i)
-print("--- %s seconds ---" % (time.time() - start_time))
+        parse_list.append(element.copy())
+    return parse_list
