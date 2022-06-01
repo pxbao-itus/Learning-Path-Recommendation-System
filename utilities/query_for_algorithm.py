@@ -2,7 +2,7 @@
 
 # get set lo that user need
 def query_get_user_need_lo(user_id):
-    return f"MATCH (u:User)-[r]->(k) " \
+    return f"MATCH (u:User)-[r]->(k)" \
            f"WHERE ID(u) = {user_id} AND TYPE(r) =~ 'NEED_.*' " \
            f"RETURN id(k) as id, r.Level as level;"
 
@@ -61,5 +61,6 @@ def query_calculate_similarity_overlap(user_id, course_id):
 def query_get_lo_user_has(user_id):
     return 'MATCH (u:User)-[ru]->(m) ' \
             f'where id(u) = {user_id} and type(ru) =~ "HAS_.*" and type(ru) <> "HAS_OBJECTIVE"' \
-            'RETURN id(m) AS id_lo, ru.Level AS level'
+            f'RETURN id(m) AS id_lo, ru.Level AS level'
+
         
