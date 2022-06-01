@@ -88,16 +88,22 @@ def get_top_course_to_step_4(user_id):
         set_course_evaluation.append(evaluate_a_set_course(set_course, user_lo_need))
     set_course_evaluation.sort(key=for_evaluating, reverse=False)
 
+    set_unique_course = []
     set_course_returned = []
     counter = 0
     for course in set_course_evaluation:
+        tem = list(set(get_list_id(course.get('set_course'))))
+        if tem not in set_unique_course:
+            set_unique_course.append(tem.copy())
+        else:
+            continue
+    for course in set_unique_course:
         counter += 1
-        set_course_returned.append(list(set(get_list_id(course.get('set_course')))))
+        set_course_returned.append(course)
         if counter >= AlgorithmConstant.OMEGA:
             break
         else:
             continue
     return set_course_returned
-
 
 # print(get_top_course_to_step_4(4248))

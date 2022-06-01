@@ -3,7 +3,7 @@ class AlgorithmConstant:
     BETA = 1
     LAMBDA = 1
     DELTA = 1
-    MUY = 2
+    MUY = 3
 
     F1 = 1
     F2 = 1
@@ -12,4 +12,4 @@ class AlgorithmConstant:
     F5 = 1
     F6 = 1
 
-    OMEGA = 3
+    OMEGA = 5

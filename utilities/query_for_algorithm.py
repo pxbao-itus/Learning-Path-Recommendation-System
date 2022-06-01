@@ -78,7 +78,7 @@ def query_to_get_list_lo_provided_by_set_course(set_course_id):
 def query_to_create_temporary_relationship_user_lo(user_id, list_lo):
     return f'WITH {list_lo} as list ' \
            f'MATCH (a:User), (b) WHERE id(a)={user_id} AND id(b) in list ' \
-           'CREATE (a)-[r:TEM_RELATIONSHIP{Level:1}]->(b);'
+           'CREATE (a)-[r:NEED_TEMPORARY {Level:1}]->(b);'
 
 
 def query_to_remove_temporary_relationship_created(user_id, list_lo):

@@ -1,6 +1,9 @@
 import itertools
+from collections import Counter
 
 from concurrent.futures.thread import ThreadPoolExecutor
+
+import numpy as np
 from py2neo import Graph
 
 from utilities.query_for_algorithm import *
@@ -122,5 +125,22 @@ def parse_for_step3_input(user_id):
         element = []
         for e in set_raw:
             element.extend(e)
-        parse_list.append(element.copy())
+        if element not in parse_list:
+            parse_list.append(element.copy())
+        else:
+            continue
     return parse_list
+
+# lista = [[1, 2, 3], [1, 2, 4], [1, 2, 3]]
+# set_list = []
+# for element in lista:
+#     if element not in set_list:
+#         set_list.append(element.copy())
+#     else:
+#         continue
+# print(set_list)
+
+# print(parse_for_step3_input(4248).__len__())
+
+# listb = [ 2, 3, 1, 2, 1, 5, 4, 4]
+# print(set(listb))
