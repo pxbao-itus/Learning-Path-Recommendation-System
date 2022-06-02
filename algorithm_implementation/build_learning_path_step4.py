@@ -8,10 +8,10 @@ import numpy as np
 import json
 from py2neo import Graph
 
-graph = Graph()
+graph = Graph("bolt://neo4j:123456@localhost:7687")
 
 # data sample for test
-# course_user_need_to_learn = [1275,1393,2318,1884,1922,2919,4159,4277,3557,1905]
+course_user_need_to_learn = [1275,1393,2318,1884,1922,2919,4159,4277,3557,1905]
 
 
 # Check if user can learn the course
@@ -131,6 +131,7 @@ def create_LP_Selection(set_of_course,user_id):
         break
  return learning_path
 
+print('hello')
 
 # print(create_LP_Selection(course_user_need_to_learn,4678))
 # print(finding_set_of_LP(4248))
