@@ -59,3 +59,9 @@ def query_create_user_need_lo(user_id):
             " match (c)-[rc:NEED_PROGRAMINGLANGUAGE]->(kc)"
             f" Where id(u)={user_id} and not (u)-[:HAS_PROGRAMINGLANGUAGE]->(kc)"
             " merge (u)-[r:NEED_PROGRAMINGLANGUAGE{Level:rc.Level}]->(kc)return id(r) as id;"]
+
+
+def query_delete_relationship_user_need_lo(user_id):
+    return 'match (u:User)-[r]->(lo) ' \
+           f'where id(u) = {user_id} and type(r) =~"NEED_.*" ' \
+           'delete r'

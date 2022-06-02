@@ -8,7 +8,7 @@ from py2neo import Graph
 
 from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
-import optimize_candidate_courses_step1
+from algorithm_implementation import optimize_candidate_courses_step1
 
 graph = Graph()
 

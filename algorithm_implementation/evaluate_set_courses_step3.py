@@ -5,7 +5,7 @@ from operator import itemgetter
 
 from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
-import finding_set_courses_step2
+from algorithm_implementation import finding_set_courses_step2
 
 graph = Graph()
 
