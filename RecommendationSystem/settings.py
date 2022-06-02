@@ -26,7 +26,7 @@ config.DATABASE_URL = 'bolt://' + os.getenv('USERNAME') + ":" + os.getenv('PASSW
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-t7qbc(yka0^b&kr1pbe#s&rl_7lbg*-iq)vg@%3aw-x5euufkf'
-
+SWAGGER_YAML_FILE = 'app.yaml'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apis.apps.ApisConfig',
+    'rest_framework_swagger',
+    'swagger_ui',
 ]
 
 MIDDLEWARE = [
@@ -128,12 +130,3 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
-# REST_FRAMEWORK = {
-#     # Use Django's standard `django.contrib.auth` permissions,
-#     # or allow read-only access for unauthenticated users.
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-#     ],
-#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-#     'PAGE_SIZE': 10
-# }

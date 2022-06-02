@@ -112,12 +112,5 @@ def query_get_list_time_of_set_course(set_course_id):
 # Query to get set of lo that user has
 def query_get_lo_user_has(user_id):
     return 'MATCH (u:User)-[ru]->(m) ' \
-<<<<<<< HEAD
-            f'where id(u) = {user_id} and type(ru) =~ "HAS_.*" and type(ru) <> "HAS_OBJECTIVE"' \
-            f'RETURN id(m) AS id_lo, ru.Level AS level'
-
-        
-=======
            f'where id(u) = {user_id} and type(ru) =~ "HAS_.*" and type(ru) <> "HAS_OBJECTIVE"' \
-           'RETURN id(m) AS id_lo, ru.Level AS level'
->>>>>>> 838a077ef657cea204e973f5418df88cd7c77ebf
+           f'RETURN id(m) AS id_lo, ru.Level AS level'

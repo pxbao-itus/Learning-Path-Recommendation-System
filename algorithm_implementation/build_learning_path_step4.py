@@ -133,3 +133,4 @@ def create_LP_Selection(set_of_course,user_id):
 
 
 # print(create_LP_Selection(course_user_need_to_learn,4678))
+# print(finding_set_of_LP(4248))
