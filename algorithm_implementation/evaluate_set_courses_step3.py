@@ -59,7 +59,10 @@ def count_sum_time_of_set_course(set_course):
     total_time = 0
 
     for time in list_time:
-        total_time += float(time.get('time')[0: time.get('time').find(" ")])
+        try:
+            total_time += float(time.get('time')[0: time.get('time').find(" ")])
+        except:
+            total_time+= 0
 
     return total_time
 

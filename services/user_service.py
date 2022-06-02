@@ -9,7 +9,7 @@ def create_user(user):
     password_hashed = hashpw(user.get('password').encode(), gensalt(10))
 
     return \
-        graph.run(query_create_user(user.get('username') | "", password_hashed.decode() | "", user.get('name'))).data()[
+        graph.run(query_create_user(user.get('username'), password_hashed.decode(), user.get('name'))).data()[
             0].get('id')
 
 
@@ -34,8 +34,8 @@ def create_user_need_lo(user_id):
     list_relationship_id = []
     for query in query_create_user_need_lo(user_id):
         result = graph.run(query).data()
-        if result.__len__() > 0:
-            list_relationship_id.append(result[0].get('id'))
+        # if result.__len__() > 0:
+        #     list_relationship_id.append(result[0].get('id'))
     # print(list_relationship_id)
 
 
