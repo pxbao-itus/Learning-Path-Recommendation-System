@@ -1,0 +1,3 @@
+match(lo)<-[r]-(c:Course) where type(r) =~'TEACH_.*'
+with collect(id(lo)) as lo_list, ['Tool','Knowledge','Platform','ProgramingLanguage','Framework'] as skill
+match(lo) where labels(lo)[0] in skill and not id(lo) in lo_list detach delete lo
