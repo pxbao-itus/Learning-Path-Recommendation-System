@@ -185,7 +185,7 @@ def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo, mode, us
 def get_set_candidate_for_all_lo(user_lo, user_lo_need, mode, user_course_extra):
     list_courses_all_lo = []
     list_future_for_thread = []
-    executor = ThreadPoolExecutor(user_lo_need.__len__() | 10)
+    executor = ThreadPoolExecutor(10)
     for lo in user_lo_need:
         list_future_for_thread.append(
             executor.submit(get_list_candidate_courses_for_a_lo, lo, user_lo_need, user_lo, mode, user_course_extra))
