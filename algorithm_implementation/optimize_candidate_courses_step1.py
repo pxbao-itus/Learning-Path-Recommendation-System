@@ -1,12 +1,10 @@
 import itertools
-
 from concurrent.futures.thread import ThreadPoolExecutor
 from py2neo import Graph
-
 from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
 
-graph = Graph()
+graph = Graph("bolt://neo4j:123456@localhost:7687")
 
 
 # get list LO that user need
@@ -185,7 +183,7 @@ def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo, mode, us
 def get_set_candidate_for_all_lo(user_lo, user_lo_need, mode, user_course_extra):
     list_courses_all_lo = []
     list_future_for_thread = []
-    executor = ThreadPoolExecutor(user_lo_need.__len__())
+    executor = ThreadPoolExecutor(user_lo_need.__len__() | 10)
     for lo in user_lo_need:
         list_future_for_thread.append(
             executor.submit(get_list_candidate_courses_for_a_lo, lo, user_lo_need, user_lo, mode, user_course_extra))
@@ -258,4 +256,4 @@ def get_input_for_step2(user_id, mode, user_course_extra):
     return sets_courses_as_list
 
 
-# print(get_input_for_step2(4248, 1, []))
+print(get_input_for_step2(889, 1, []))

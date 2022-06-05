@@ -26,7 +26,6 @@ config.DATABASE_URL = 'bolt://' + os.getenv('USERNAME') + ":" + os.getenv('PASSW
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-t7qbc(yka0^b&kr1pbe#s&rl_7lbg*-iq)vg@%3aw-x5euufkf'
-SWAGGER_YAML_FILE = 'app.yaml'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -42,8 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apis.apps.ApisConfig',
-    'rest_framework_swagger',
-    'swagger_ui',
+    # 'rest_framework_swagger',
+    # 'swagger_ui',
 ]
 
 MIDDLEWARE = [

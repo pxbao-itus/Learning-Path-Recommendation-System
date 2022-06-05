@@ -5,9 +5,9 @@ from operator import itemgetter
 
 from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
-import finding_set_courses_step2
+from algorithm_implementation import finding_set_courses_step2
 
-graph = Graph()
+graph = Graph("bolt://neo4j:123456@localhost:7687")
 
 
 # count amount course in final set course
@@ -59,7 +59,10 @@ def count_sum_time_of_set_course(set_course):
     total_time = 0
 
     for time in list_time:
-        total_time += float(time.get('time')[0: time.get('time').find(" ")])
+        try:
+            total_time += float(time.get('time')[0: time.get('time').find(" ")])
+        except:
+            total_time+= 0
 
     return total_time
 
@@ -106,4 +109,4 @@ def get_top_course_to_step_4(user_id):
             continue
     return set_course_returned
 
-# print(get_top_course_to_step_4(4248))
+print(get_top_course_to_step_4(889))
