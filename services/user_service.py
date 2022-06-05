@@ -1,5 +1,7 @@
 from py2neo import Graph
 from bcrypt import *
+
+from algorithm_implementation import build_learning_path_step4, evaluate_set_courses_step3
 from utilities.query_for_services import *
 
 graph = Graph("bolt://neo4j:123456@localhost:7687")
@@ -42,7 +44,10 @@ def create_user_need_lo(user_id):
 def delete_user_need_lo(user_id):
     graph.run(query_delete_relationship_user_need_lo(user_id))
 
-# print(create_objective_career(4263, 214))
 
-# create_user_has_lo(4261, [{'id': 116, 'type': 'tool', 'level': 1}])
-# create_user_need_lo(4262)
+def get_learning_path(user_id):
+    create_user_need_lo(user_id)
+    lb = build_learning_path_step4.completing_step4(user_id)
+    delete_user_need_lo(user_id)
+    return lb
+

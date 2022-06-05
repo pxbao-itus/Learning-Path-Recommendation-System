@@ -136,9 +136,10 @@ def create_LP_Selection(set_of_course, user_id):
     return learning_path
 
 
-# print(finding_set_of_LP(889))
-from services import user_service
-user_id = 896
-user_service.create_user_need_lo(user_id)
-print(finding_set_of_LP(user_id))
-user_service.delete_user_need_lo(user_id)
+def completing_step4(user_id):
+    all_of_course = get_top_course_to_step_4(user_id)
+    learning_paths = []
+    for set_of_course in all_of_course:
+        learning_paths.append(create_LP_Selection(set_of_course, user_id))
+    return learning_paths
+
