@@ -1,8 +1,9 @@
 import json
 from django.http import JsonResponse
 
+import algorithm_implementation
 from services import user_service
-from algorithm_implementation import build_learning_path_step4
+from algorithm_implementation import build_learning_path_step4, evaluate_set_courses_step3
 
 
 def create_user(request):
@@ -39,8 +40,5 @@ def create_user_has_lo(request):
 
 
 def get_learning_path(request):
-    user_id = int(request.GET.get("id"))
-    user_service.create_user_need_lo(user_id)
-    lb = build_learning_path_step4.finding_set_of_LP(user_id)
-    user_service.delete_user_need_lo(user_id)
+    lb = user_service.get_learning_path(int(request.GET.get("id")))
     return JsonResponse(lb, safe=False)
