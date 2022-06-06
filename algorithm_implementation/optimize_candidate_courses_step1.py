@@ -1,10 +1,12 @@
+import sys
+sys.path.insert(0, '../')
 import itertools
 from concurrent.futures.thread import ThreadPoolExecutor
 from py2neo import Graph
 from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
 
-graph = Graph("bolt://neo4j:123456@localhost:7687")
+graph = Graph()
 
 
 # get list LO that user need
@@ -256,4 +258,4 @@ def get_input_for_step2(user_id, mode, user_course_extra):
     return sets_courses_as_list
 
 
-print(get_input_for_step2(889, 1, []))
+# print(get_input_for_step2(889, 1, []))

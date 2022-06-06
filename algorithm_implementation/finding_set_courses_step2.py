@@ -140,7 +140,7 @@ def parse_for_step3_input(user_id):
 #         continue
 # print(set_list)
 
-print(parse_for_step3_input(889))
+# print(parse_for_step3_input(889))
 
 # listb = [ 2, 3, 1, 2, 1, 5, 4, 4]
 # print(set(listb))

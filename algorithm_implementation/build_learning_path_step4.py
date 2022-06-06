@@ -1,18 +1,18 @@
 
-import sys
-sys.path.insert(0, '../')
+# import sys
+# sys.path.insert(0, '../')
 from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
-import evaluate_set_courses_step3
+from algorithm_implementation import evaluate_set_courses_step3
+# import evaluate_set_courses_step3
 import numpy as np
 import json
 from py2neo import Graph
 
-graph = Graph("bolt://neo4j:123456@localhost:7687")
+graph = Graph()
 
 
 # data sample for test
-course_user_need_to_learn = [1275,1393,2318,1884,1922,2919,4159,4277,3557,1905]
 
 
 # Check if user can learn the course
@@ -137,9 +137,10 @@ def create_LP_Selection(set_of_course, user_id):
 
 
 def completing_step4(user_id):
-    all_of_course = get_top_course_to_step_4(user_id)
+    all_of_course = evaluate_set_courses_step3.get_top_course_to_step_4(user_id)
     learning_paths = []
     for set_of_course in all_of_course:
         learning_paths.append(create_LP_Selection(set_of_course, user_id))
     return learning_paths
 
+print(completing_step4(4685))
