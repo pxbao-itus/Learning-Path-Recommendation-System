@@ -1,7 +1,6 @@
 import itertools
 from collections import Counter
 
-from concurrent.futures.thread import ThreadPoolExecutor
 
 import numpy as np
 from py2neo import Graph
@@ -96,6 +95,7 @@ def make_descartes_set(user_id, user_lo_require, user_lo_current_require, user_c
 
 def complete_set_course(sets_courses, user_id, user_course_extra, user_lo_require, user_lo_current_require,
                         set_complete_course):
+    print(sets_courses.__len__())
     for set_course in sets_courses:
         user_course_extra.append(set_course.copy())
         user_lo_require.append(user_lo_current_require.copy())
@@ -104,8 +104,8 @@ def complete_set_course(sets_courses, user_id, user_course_extra, user_lo_requir
         user_lo_current_require = get_user_lo_current_require(set_course, user_lo_require, user_lo_current_require)
         if user_lo_current_require.__len__() == 0:
             set_complete_course.append(user_course_extra.copy())
-            abc = user_course_extra.pop()
-            cde = user_lo_require.pop()
+            user_course_extra.pop()
+            user_lo_require.pop()
             continue
         else:
             create_temporary_relationship(user_id, user_lo_current_require)
@@ -114,6 +114,7 @@ def complete_set_course(sets_courses, user_id, user_course_extra, user_lo_requir
                 user_course_extra, user_lo_require, user_lo_current_require, set_complete_course)
     if user_course_extra.__len__() > 0:
         user_course_extra.pop()
+    return
 
 
 def parse_for_step3_input(user_id):

@@ -1,6 +1,8 @@
 import itertools
 
 from concurrent.futures.thread import ThreadPoolExecutor
+from random import randint
+
 from py2neo import Graph
 
 from utilities.query_for_algorithm import *
@@ -152,7 +154,7 @@ def is_rating_for_course_greater_than_lambda(course_id):
 # checking for a course that satisfy criteria provide by user
 def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteria, user_course_extra):
     list_lo_provided_by_course = graph.run(query_get_lo_provided_by_course(course_id)).data()
-    if lo_dict not in list_lo_provided_by_course:
+    if not is_lo_belong_set_lo(list_lo_provided_by_course, lo_dict):
         return False
     switcher = {
         0: is_course_existed(course_id, user_course_extra),
@@ -216,7 +218,8 @@ def filter_list_not_none(list_need_filtering):
 
 # reduce set candidate courses by get top n element hava higher similarity
 def get_top_candidate_courses_of_a_lo(user_id, course_lo):
-    if course_lo.__len__() < AlgorithmConstant.MUY:
+    muy = randint(1, 2)
+    if course_lo.__len__() < muy:
         return course_lo
 
     for course in course_lo:
@@ -227,7 +230,7 @@ def get_top_candidate_courses_of_a_lo(user_id, course_lo):
     counter = 0
     for course in course_lo:
         course.pop('similarity')
-        if counter < AlgorithmConstant.MUY:
+        if counter < muy:
             counter += 1
             top_muy_course.append(course)
         else:
@@ -256,6 +259,5 @@ def get_input_for_step2(user_id, mode, user_course_extra):
         sets_courses_as_list.append(list(i))
 
     return sets_courses_as_list
-
 
 # print(get_input_for_step2(4248, 1, []))

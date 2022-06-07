@@ -7,3 +7,8 @@ match(lo) where labels(lo)[0] in skill and not id(lo) in lo_list detach delete l
 match (c:Course)-[r]->(lo)<-[r1]-(c)
 where type(r)=~"TEACH.*" and type(r1)=~"REQUIRE.*"
 delete r1;
+
+# Remove label, relationship unnecessary
+match (c:Course)-[r]->(x)
+where type(r)="COLLABORATE_WITH" or type(r)="TEACH_IN" or type(r)="IS_IN" or type(r)="HAS_LEVEL" or type(r)="BELONG"
+delete r, x

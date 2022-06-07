@@ -43,7 +43,7 @@ def count_avg_evaluation_for_set_course(set_course):
     set_course_id = list(set(get_list_id(set_course)))
     avg_rating = graph.run(query_get_rating_set_course(set_course_id)).data()
 
-    return avg_rating[0].get('avgRating') or 0
+    return 1 / avg_rating[0].get('avgRating') or 0
 
 
 def count_sum_tuition_of_set_course(set_course):

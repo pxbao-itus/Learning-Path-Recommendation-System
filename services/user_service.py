@@ -46,6 +46,7 @@ def delete_user_need_lo(user_id):
 
 
 def get_learning_path(user_id):
+    delete_user_need_lo(user_id)
     create_user_need_lo(user_id)
     lb = build_learning_path_step4.completing_step4(user_id)
     delete_user_need_lo(user_id)
