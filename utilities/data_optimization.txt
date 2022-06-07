@@ -12,3 +12,8 @@ delete r1;
 match (c:Course)-[r]->(x)
 where type(r)="COLLABORATE_WITH" or type(r)="TEACH_IN" or type(r)="IS_IN" or type(r)="HAS_LEVEL" or type(r)="BELONG"
 delete r, x
+# Upgrate property level of TEACH Relationship to 5
+match(c:Course)-[r]->(lo) where type(r) =~'TEACH_.*' and type(r) <> 'TEACH_IN'
+set r.Level = 5
+return c,r,lo;
+

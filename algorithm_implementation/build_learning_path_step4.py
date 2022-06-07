@@ -1,11 +1,10 @@
-import sys
 
-import algorithm_implementation.evaluate_set_courses_step3
-
-sys.path.insert(0, '../')
+# import sys
+# sys.path.insert(0, '../')
 from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
-from algorithm_implementation.evaluate_set_courses_step3 import *
+from algorithm_implementation import evaluate_set_courses_step3
+# import evaluate_set_courses_step3
 import numpy as np
 import json
 from py2neo import Graph
@@ -14,7 +13,6 @@ graph = Graph()
 
 
 # data sample for test
-# course_user_need_to_learn = [1275,1393,2318,1884,1922,2919,4159,4277,3557,1905]
 
 
 # Check if user can learn the course
@@ -84,10 +82,11 @@ def create_LP(set_of_course, user_id):
 # input: set of course from step 3, user_id of User
 # output: List of Learning Path
 def finding_set_of_LP(user_id):
-    all_of_course = get_top_course_to_step_4(user_id)
+    all_of_course = evaluate_set_courses_step3.get_top_course_to_step_4(user_id)
+    print("all_of_course: ",all_of_course)
     set_of_lp = []
     for set_of_course in all_of_course:
-        set_of_lp.append(create_LP(set_of_course, user_id))
+        set_of_lp.append(create_LP_Selection(set_of_course, user_id))
     return set_of_lp
 
 
@@ -138,9 +137,10 @@ def create_LP_Selection(set_of_course, user_id):
 
 
 def completing_step4(user_id):
-    all_of_course = get_top_course_to_step_4(user_id)
+    all_of_course = evaluate_set_courses_step3.get_top_course_to_step_4(user_id)
     learning_paths = []
     for set_of_course in all_of_course:
         learning_paths.append(create_LP_Selection(set_of_course, user_id))
     return learning_paths
 
+print(completing_step4(4685))

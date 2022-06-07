@@ -4,7 +4,7 @@ from bcrypt import *
 from algorithm_implementation import build_learning_path_step4, evaluate_set_courses_step3
 from utilities.query_for_services import *
 
-graph = Graph()
+graph = Graph("bolt://neo4j:123456@localhost:7687")
 
 
 def create_user(user):

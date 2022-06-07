@@ -1,10 +1,8 @@
 import itertools
-
 from concurrent.futures.thread import ThreadPoolExecutor
 from random import randint
 
 from py2neo import Graph
-
 from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
 
@@ -259,5 +257,3 @@ def get_input_for_step2(user_id, mode, user_course_extra):
         sets_courses_as_list.append(list(i))
 
     return sets_courses_as_list
-
-# print(get_input_for_step2(4248, 1, []))

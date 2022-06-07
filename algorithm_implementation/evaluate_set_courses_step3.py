@@ -7,7 +7,7 @@ from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
 from algorithm_implementation import finding_set_courses_step2
 
-graph = Graph()
+graph = Graph("bolt://neo4j:123456@localhost:7687")
 
 
 # count amount course in final set course
@@ -109,4 +109,4 @@ def get_top_course_to_step_4(user_id):
             continue
     return set_course_returned
 
-# print(get_top_course_to_step_4(4248))
+# print(get_top_course_to_step_4(889))

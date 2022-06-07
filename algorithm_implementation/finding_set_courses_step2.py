@@ -9,7 +9,7 @@ from utilities.query_for_algorithm import *
 from constants.algorithm_constants import *
 from algorithm_implementation import optimize_candidate_courses_step1
 
-graph = Graph()
+graph = Graph("bolt://neo4j:123456@localhost:7687")
 
 
 # checking lo is inside in user_lo_require or user_lo_current_require
@@ -141,7 +141,7 @@ def parse_for_step3_input(user_id):
 #         continue
 # print(set_list)
 
-# print(parse_for_step3_input(4248).__len__())
+# print(parse_for_step3_input(889))
 
 # listb = [ 2, 3, 1, 2, 1, 5, 4, 4]
 # print(set(listb))
