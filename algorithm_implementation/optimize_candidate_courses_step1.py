@@ -62,6 +62,29 @@ def is_inside_set_lo(set_lo, lo_dict):
     return False
 
 
+
+def is_provided(set_lo, lo_dict):
+    for lo in set_lo:
+        if type(lo) is list:
+            for sub_lo in lo:
+                if sub_lo.get('id') == lo_dict.get('id') \
+                        and sub_lo.get('level') is not None \
+                        and sub_lo.get('level') is not None \
+                        and sub_lo.get('level') <= lo_dict.get('level'):
+                    return True
+                else:
+                    continue
+        else:
+            if lo.get('id') == lo_dict.get('id') \
+                    and lo.get('level') is not None \
+                    and lo_dict.get('level') is not None \
+                    and lo.get('level') <= lo_dict.get('level'):
+                return True
+            else:
+                continue
+    return False
+
+
 # checking for a course that is or not satisfy zero criteria
 def is_course_existed(course_id, user_course_extra):
     for course in user_course_extra:
@@ -79,7 +102,7 @@ def is_course_provided_more_than_one_lo(list_lo, lo_dict, user_lo_need):
     if list_lo.__len__() < 2:
         return False
     for lo in list_lo:
-        if lo_dict.get('id') != lo.get('id') and is_lo_belong_set_lo(user_lo_need, lo):
+        if lo_dict.get('id') != lo.get('id') and is_provided(user_lo_need, lo):
             result = True
     return result
 
@@ -152,8 +175,8 @@ def is_rating_for_course_greater_than_lambda(course_id):
 # checking for a course that satisfy criteria provide by user
 def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteria, user_course_extra):
     list_lo_provided_by_course = graph.run(query_get_lo_provided_by_course(course_id)).data()
-    if not is_lo_belong_set_lo(list_lo_provided_by_course, lo_dict):
-        return False
+    # if not is_lo_belong_set_lo(list_lo_provided_by_course, lo_dict):
+    #     return False
     switcher = {
         0: is_course_existed(course_id, user_course_extra),
         1: is_course_provided_more_than_one_lo(list_lo_provided_by_course, lo_dict, user_lo_need),
@@ -179,6 +202,7 @@ def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo, mode, us
             return list_course_lo
         else:
             continue
+    return course_lo
 
 
 # get all candidate courses for all lo
@@ -217,7 +241,7 @@ def filter_list_not_none(list_need_filtering):
 # reduce set candidate courses by get top n element hava higher similarity
 def get_top_candidate_courses_of_a_lo(user_id, course_lo):
     muy = randint(1, 2)
-    if course_lo.__len__() < muy:
+    if course_lo.__len__() < AlgorithmConstant.MUY:
         return course_lo
 
     for course in course_lo:
@@ -228,7 +252,7 @@ def get_top_candidate_courses_of_a_lo(user_id, course_lo):
     counter = 0
     for course in course_lo:
         course.pop('similarity')
-        if counter < muy:
+        if counter < AlgorithmConstant.MUY:
             counter += 1
             top_muy_course.append(course)
         else:
@@ -257,3 +281,4 @@ def get_input_for_step2(user_id, mode, user_course_extra):
         sets_courses_as_list.append(list(i))
 
     return sets_courses_as_list
+

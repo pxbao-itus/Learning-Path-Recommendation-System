@@ -143,4 +143,4 @@ def completing_step4(user_id):
         learning_paths.append(create_LP_Selection(set_of_course, user_id))
     return learning_paths
 
-print(completing_step4(4685))
+# print(completing_step4(4685))
