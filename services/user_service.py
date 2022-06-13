@@ -1,22 +1,37 @@
 from py2neo import Graph
 from bcrypt import *
 
-from algorithm_implementation import build_learning_path_step4, evaluate_set_courses_step3, optimize_candidate_courses_step1
+from algorithm_implementation import build_learning_path_step4, evaluate_set_courses_step3, \
+    optimize_candidate_courses_step1
+from models.user import User
 from utilities.query_for_services import *
 
 graph = Graph()
 
 
-def create_user(user):
-    password_hashed = hashpw(user.get('password').encode(), gensalt(10))
+# def create_user(user):
+#     password_hashed = hashpw(user.get('password').encode(), gensalt(10))
+#
+#     return \
+#         graph.run(query_create_user(user.get('username'), password_hashed.decode(), user.get('name'))).data()[
+#             0].get('id')
 
-    return \
-        graph.run(query_create_user(user.get('username'), password_hashed.decode(), user.get('name'))).data()[
-            0].get('id')
+def create_user(user):
+    return graph.run(query_create_user(user.get('name'), user.get('email'), user.get('cost'), user.get('time'))).data()
 
 
 def get_user_info(user_id):
-    return graph.run(query_get_user_info(user_id)).data()[0]
+    result = graph.run(query_get_user_info(user_id)).data()
+    if result.__len__() > 0:
+        career = graph.run(query_get_objective(user_id)).data()
+        if career.__len__() > 0:
+            print(career)
+            result[0]['career'] = career[0].get('id')
+        else:
+            result[0]['career'] = 0
+        return User(result[0])
+    else:
+        return False
 
 
 def create_objective_career(user_id, career_id):
@@ -54,4 +69,3 @@ def get_learning_path(user_id):
     return lb
 
 # get_learning_path(4681)
-

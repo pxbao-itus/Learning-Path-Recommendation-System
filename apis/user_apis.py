@@ -4,22 +4,31 @@ from django.http import JsonResponse
 import algorithm_implementation
 from services import user_service
 from algorithm_implementation import build_learning_path_step4, evaluate_set_courses_step3
+from models.user import User
 
 
 def create_user(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     user = {
-        'username': body['username'],
-        'password': body['password'],
-        'name': body['name']
+        'name': body['name'],
+        'email': body['email'],
+        'cost': body['cost'],
+        'time': body['time']
     }
-    user_service.create_user(user)
-    return JsonResponse(user)
+    result = user_service.create_user(user)
+    if result.__len__() > 0:
+        return JsonResponse(result[0])
+    else:
+        return JsonResponse.status_code(400)
 
 
 def get_user_info(request):
-    return JsonResponse(user_service.get_user_info(int(request.GET.get("id"))), safe=False)
+    result = user_service.get_user_info(int(request.GET.get("id")))
+    if isinstance(result, User):
+        return JsonResponse(result.get_user(), safe=False)
+    else:
+        return JsonResponse.status_code(400)
 
 
 def create_objective_career(request):

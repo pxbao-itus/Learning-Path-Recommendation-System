@@ -1,15 +1,23 @@
-def query_create_user(user_username, user_password, user_name):
-    return "merge (n:User {name:'%s', username:'%s', password:'%s'}) return id(n) as id; " % (
-        user_name, user_username, user_password)
+def query_create_user(name, email, cost, time):
+    return "merge (n:User {name:'%s', email:'%s', cost:%d, time:%d}) return id(n) as id; " % (
+        name, email, cost, time)
 
 
 def query_get_user_info(user_id):
-    return f'match (u:User) where id(u)={user_id} return id(u) as id, u.username as username, u.name as name;'
+    return f'match (u:User)' \
+           f'where id(u)={user_id} ' \
+           f'return id(u) as id, u.email as email, u.name as name, u.cost as cost, u.time as time;'
 
 
 def query_create_objective_career(user_id, career_id):
     return f'MATCH (a:User), (b:Career) WHERE id(a)={user_id} AND id(b)={career_id} merge (a)-[r:HAS_OBJECTIVE]->(b) ' \
            f'return id(r) as id; '
+
+
+def query_get_objective(user_id):
+    return f'Match (u:User)-[r]->(c:Career) ' \
+           f'where id(u) = {user_id} ' \
+           f'return id(c) as id'
 
 
 def query_create_has_lo(user_id, lo):
