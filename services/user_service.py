@@ -1,10 +1,10 @@
 from py2neo import Graph
 from bcrypt import *
 
-from algorithm_implementation import build_learning_path_step4, evaluate_set_courses_step3
+from algorithm_implementation import build_learning_path_step4, evaluate_set_courses_step3, optimize_candidate_courses_step1
 from utilities.query_for_services import *
 
-graph = Graph("bolt://neo4j:123456@localhost:7687")
+graph = Graph()
 
 
 def create_user(user):
@@ -50,5 +50,8 @@ def get_learning_path(user_id):
     create_user_need_lo(user_id)
     lb = build_learning_path_step4.completing_step4(user_id)
     delete_user_need_lo(user_id)
+
     return lb
+
+# get_learning_path(4681)
 

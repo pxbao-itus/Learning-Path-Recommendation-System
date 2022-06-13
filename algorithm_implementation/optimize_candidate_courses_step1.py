@@ -175,8 +175,7 @@ def is_rating_for_course_greater_than_lambda(course_id):
 # checking for a course that satisfy criteria provide by user
 def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteria, user_course_extra):
     list_lo_provided_by_course = graph.run(query_get_lo_provided_by_course(course_id)).data()
-    # if not is_lo_belong_set_lo(list_lo_provided_by_course, lo_dict):
-    #     return False
+
     switcher = {
         0: is_course_existed(course_id, user_course_extra),
         1: is_course_provided_more_than_one_lo(list_lo_provided_by_course, lo_dict, user_lo_need),
@@ -191,12 +190,12 @@ def is_candidate_courses_a_LO(course_id, lo_dict, user_lo_need, user_lo, criteri
 
 # get candidate courses for a lo
 def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo, mode, user_course_extra):
-    course_lo = graph.run(query_get_courses_provided_a_lo(lo_dict.get('id'))).data()
+    course_lo = graph.run(query_get_courses_provided_a_lo(lo_dict.get('id'), lo_dict.get('level'))).data()
     list_course_lo = []
 
     for i in range(7 - mode):
         for course in course_lo:
-            if is_candidate_courses_a_LO(course.get('id'), lo_dict, user_lo_need, user_lo, i + mode, user_course_extra):
+            if course.get('id') is not None and is_candidate_courses_a_LO(course.get('id'), lo_dict, user_lo_need, user_lo, i + mode, user_course_extra):
                 list_course_lo.append(course)
         if list_course_lo.__len__() > 0:
             return list_course_lo
@@ -240,7 +239,6 @@ def filter_list_not_none(list_need_filtering):
 
 # reduce set candidate courses by get top n element hava higher similarity
 def get_top_candidate_courses_of_a_lo(user_id, course_lo):
-    muy = randint(1, 2)
     if course_lo.__len__() < AlgorithmConstant.MUY:
         return course_lo
 
@@ -280,5 +278,7 @@ def get_input_for_step2(user_id, mode, user_course_extra):
     for i in sets_courses:
         sets_courses_as_list.append(list(i))
 
-    return sets_courses_as_list
+    return sets_courses
 
+# for i in get_input_for_step2(4681, 1, []):
+#     print(i)

@@ -18,7 +18,7 @@ def query_get_user_lo(user_id):
 def query_get_lo_provided_by_course(course_id):
     query = 'MATCH (lo) <- [r2] - (c:Course) ' \
             f'WHERE id(c) = {course_id} ' \
-            f'AND TYPE(r2) =~ "TEACH_.*" AND TYPE(r2) <> "TEACH_IN" ' \
+            f'AND TYPE(r2) =~ "TEACH_.*" ' \
             f'RETURN id(lo) as id, r2.Level as level'
     return query
 
@@ -36,8 +36,8 @@ def query_get_rating_course(course_id):
 
 
 # get set courses provided lo
-def query_get_courses_provided_a_lo(lo_id):
-    return f'MATCH (lo)<-[r]-(c:Course) WHERE id(lo) = {lo_id} return id(c) as id'
+def query_get_courses_provided_a_lo(lo_id, level):
+    return f'MATCH (lo)<-[r]-(c:Course) WHERE id(lo) = {lo_id} and r.Level >= {level} and type(r)=~"TEACH.*" return id(c) as id'
 
 
 # calculate similarity between a Course and a User

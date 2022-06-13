@@ -95,9 +95,8 @@ def make_descartes_set(user_id, user_lo_require, user_lo_current_require, user_c
 
 def complete_set_course(sets_courses, user_id, user_course_extra, user_lo_require, user_lo_current_require,
                         set_complete_course):
-    print(sets_courses.__len__())
     for set_course in sets_courses:
-        user_course_extra.append(set_course.copy())
+        user_course_extra.append(list(set_course).copy())
         user_lo_require.append(user_lo_current_require.copy())
         delete_temporary_relationship_created(user_id, user_lo_current_require)
         user_lo_current_require.clear()
@@ -132,16 +131,7 @@ def parse_for_step3_input(user_id):
             continue
     return parse_list
 
-# lista = [[1, 2, 3], [1, 2, 4], [1, 2, 3]]
-# set_list = []
-# for element in lista:
-#     if element not in set_list:
-#         set_list.append(element.copy())
-#     else:
-#         continue
-# print(set_list)
 
-# print(parse_for_step3_input(889))
 
-# listb = [ 2, 3, 1, 2, 1, 5, 4, 4]
-# print(set(listb))
+# print(parse_for_step3_input(4681)[0])
+

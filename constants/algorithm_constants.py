@@ -1,9 +1,9 @@
 class AlgorithmConstant:
-    ALPHA = 3
-    BETA = 2
-    LAMBDA = 2
-    DELTA = 2
-    MUY = 1
+    ALPHA = 1
+    BETA = 1
+    LAMBDA = 1
+    DELTA = 1
+    MUY = 2
 
     F1 = 1
     F2 = 1
