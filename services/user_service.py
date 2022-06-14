@@ -61,9 +61,10 @@ def delete_user_need_lo(user_id):
 
 
 def get_learning_path(user_id):
+    user = User(graph.run(query_get_user_info(user_id)).data()[0])
     delete_user_need_lo(user_id)
     create_user_need_lo(user_id)
-    lb = build_learning_path_step4.completing_step4(user_id)
+    lb = build_learning_path_step4.completing_step4(user)
     delete_user_need_lo(user_id)
 
     return lb

@@ -136,11 +136,11 @@ def create_LP_Selection(set_of_course, user_id):
     return learning_path
 
 
-def completing_step4(user_id):
-    all_of_course = get_top_course_to_step_4(user_id)
+def completing_step4(user):
+    all_of_course = get_top_course_to_step_4(user)
     learning_paths = []
     for set_of_course in all_of_course:
-        learning_paths.append(create_LP(set_of_course, user_id))
+        learning_paths.append(create_LP(set_of_course, user.id))
     return learning_paths
 
 # print(completing_step4(4681))

@@ -27,6 +27,13 @@ def count_amount_lo_redundant(set_course, user_lo_need):
     return set_lo.__len__() - user_lo_need.__len__()
 
 
+# count duplicate lo
+def count_duplicate_lo(set_course):
+    lo_provided = graph.run(query_to_get_list_lo_provided_by_set_course(get_list_id(set_course))).data()
+    set_lo = list(set(get_list_id(lo_provided)))
+    return lo_provided.__len__() - set_lo.__len__()
+
+
 def count_amount_level_redundant(set_course, user_lo_need):
     counter = 0
     lo_provided = graph.run(query_to_get_list_lo_provided_by_set_course(get_list_id(set_course))).data()
@@ -64,7 +71,7 @@ def count_sum_time_of_set_course(set_course):
         try:
             total_time += float(time.get('time')[0: time.get('time').find(" ")])
         except:
-            total_time+= 0
+            total_time += 0
 
     return total_time
 
@@ -75,9 +82,7 @@ def evaluate_a_set_course(set_course, user_lo_need):
         'point': AlgorithmConstant.F1 * count_amount_course_in_a_set_course(set_course)
                  + AlgorithmConstant.F2 * count_amount_lo_redundant(set_course, user_lo_need)
                  + AlgorithmConstant.F3 * count_amount_level_redundant(set_course, user_lo_need)
-                 + AlgorithmConstant.F4 * count_avg_evaluation_for_set_course(set_course)
-                 + AlgorithmConstant.F5 * count_sum_tuition_of_set_course(set_course)
-                 + AlgorithmConstant.F6 * count_sum_time_of_set_course(set_course)
+                 + AlgorithmConstant.F4 * count_duplicate_lo(set_course)
     }
 
 
@@ -85,11 +90,32 @@ def for_evaluating(e):
     return e.get('point')
 
 
-def get_top_course_to_step_4(user_id):
-    user_lo_need = graph.run(query_get_user_need_lo(user_id)).data()
-    set_course_complete = finding_set_courses_step2.parse_for_step3_input(user_id)
+def filter_cost_time(user, set_course):
+    if user.is_time():
+        if user.time >= count_sum_time_of_set_course(set_course):
+            return True
+        else:
+            return False
+    elif user.is_cost():
+        if user.cost >= count_sum_tuition_of_set_course(set_course):
+            return True
+        else:
+            return False
+    else:
+        return True
+
+
+def filtered_by_cost_or_time(user, set_course_complete):
+    return list(filter(lambda x: filter_cost_time(user, x), set_course_complete))
+
+
+def get_top_course_to_step_4(user):
+    user_lo_need = graph.run(query_get_user_need_lo(user.id)).data()
+    set_course_complete = finding_set_courses_step2.parse_for_step3_input(user.id)
+
+    set_course_filtered = filtered_by_cost_or_time(user, set_course_complete)
     set_course_evaluation = []
-    for set_course in set_course_complete:
+    for set_course in set_course_filtered:
         set_course_evaluation.append(evaluate_a_set_course(set_course, user_lo_need))
     set_course_evaluation.sort(key=for_evaluating, reverse=False)
 
