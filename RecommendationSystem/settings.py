@@ -28,7 +28,10 @@ config.DATABASE_URL = 'bolt://' + os.getenv('USERNAME') + ":" + os.getenv('PASSW
 SECRET_KEY = 'django-insecure-t7qbc(yka0^b&kr1pbe#s&rl_7lbg*-iq)vg@%3aw-x5euufkf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+STATIC_URL = '/public/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -68,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.static',
             ],
         },
     },

@@ -30,6 +30,7 @@ py2neo = "~=2021.2.3"
 Django = "==4.0.4"
 ez_setup = "==0.9"
 Shapely = "==1.8.2"
+igraph = "*"
 
 [dev-packages]
 

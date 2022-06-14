@@ -1,20 +1,13 @@
 from py2neo import Graph
-from bcrypt import *
 
 from algorithm_implementation import build_learning_path_step4, evaluate_set_courses_step3, \
     optimize_candidate_courses_step1
 from models.user import User
 from utilities.query_for_services import *
+from services import igraph_service
 
 graph = Graph()
 
-
-# def create_user(user):
-#     password_hashed = hashpw(user.get('password').encode(), gensalt(10))
-#
-#     return \
-#         graph.run(query_create_user(user.get('username'), password_hashed.decode(), user.get('name'))).data()[
-#             0].get('id')
 
 def create_user(user):
     return graph.run(query_create_user(user.get('name'), user.get('email'), user.get('cost'), user.get('time'))).data()
@@ -65,8 +58,15 @@ def get_learning_path(user_id):
     delete_user_need_lo(user_id)
     create_user_need_lo(user_id)
     lb = build_learning_path_step4.completing_step4(user)
+    result = []
+    counter = 1
+    for path in lb:
+        element = {}
+        element["path"] = path
+        igraph_service.visualize_learning_path(path, counter)
+        element["visualization"] = f'/static/learning-path-{counter}.png'
+        result.append(element.copy())
+        counter += 1
     delete_user_need_lo(user_id)
 
-    return lb
-
-# get_learning_path(4681)
+    return result
