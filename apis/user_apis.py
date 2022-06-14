@@ -48,6 +48,10 @@ def create_user_has_lo(request):
     return JsonResponse(status=200, data={"message": "succeed"})
 
 
+def get_lo_need_by_user(request):
+    return JsonResponse(status=200, data=user_service.get_lo_need_by_user(int(request.GET.get('id'))), safe=False)
+
+
 def get_learning_path(request):
     lb = user_service.get_learning_path(int(request.GET.get("id")))
     return JsonResponse(lb, safe=False)

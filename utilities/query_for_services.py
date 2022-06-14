@@ -80,3 +80,28 @@ def query_get_course_name_by_id(set_course):
            f'match (c:Course) ' \
            f'where id(c) in list ' \
            f'return c.crsName as name'
+
+
+def query_get_lo_need_by_career(career_id):
+    return ' match (c:Career)-[r]->(lo) ' \
+           f'where id(c) = {career_id} ' \
+           f'return id(lo) as id, lo.value as name, type(r) as type'
+
+
+def query_get_info_a_course(course_id):
+    return 'match (c:Course) ' \
+           f'where id(c) = {course_id} ' \
+           f'return id(c) as id, c.crsName as name, c.crsEnroll as enroll, c.crsFee as fee, c.crsLink as link,' \
+           f' c.crsTime as time'
+
+
+def query_get_lo_user_has(user_id):
+    return 'match (u:User)-[r]-(lo) ' \
+           f'where id(u) = {user_id} and type(r) <> "HAS_OBJECTIVE" ' \
+           f'return id(lo) as id, lo.value as value, r.Level as level'
+
+
+def query_get_lo_need_by_career_by_user_id(user_id):
+    return ' match (u:User)-[r1]->(c:Career)-[r]->(lo) ' \
+           f'where id(u) = {user_id} ' \
+           f'return id(lo) as id, lo.value as name, r.Level as level, type(r) as type'

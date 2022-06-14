@@ -12,3 +12,7 @@ def get_all_career(request):
 def get_career_by_id(request):
     id = int(request.GET.get("id"))
     return JsonResponse(career_service.get_career_by_id(id), safe=False)
+
+
+def get_lo_need(request):
+    return JsonResponse(status=200, data=career_service.get_lo_career_need(int(request.GET.get("id"))), safe=False)

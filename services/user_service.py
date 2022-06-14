@@ -84,3 +84,17 @@ def get_course_name_by_id(set_course):
     list_name = graph.run(query_get_course_name_by_id(set_course)).data()
     list_name = get_list_name(list_name)
     return list_name
+
+
+def get_lo_need_by_user(user_id):
+    user_lo = graph.run(query_get_lo_user_has(user_id)).data()
+    career_lo = graph.run(query_get_lo_need_by_career_by_user_id(user_id)).data()
+    lo_user_need = []
+    for lo_career in career_lo:
+        check = True
+        for lo_user in user_lo:
+            if lo_user.get('id') == lo_career.get('id') and lo_user.get('level') >= lo_career.get('level'):
+                check = False
+        if check:
+            lo_user_need.append(lo_career.copy())
+    return lo_user_need
