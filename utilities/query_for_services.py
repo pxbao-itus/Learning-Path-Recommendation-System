@@ -73,3 +73,10 @@ def query_delete_relationship_user_need_lo(user_id):
     return 'match (u:User)-[r]->(lo) ' \
            f'where id(u) = {user_id} and type(r) =~"NEED_.*" ' \
            'delete r'
+
+
+def query_get_course_name_by_id(set_course):
+    return f'with {set_course} as list ' \
+           f'match (c:Course) ' \
+           f'where id(c) in list ' \
+           f'return c.crsName as name'

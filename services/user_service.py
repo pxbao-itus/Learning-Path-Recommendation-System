@@ -63,10 +63,24 @@ def get_learning_path(user_id):
     for path in lb:
         element = {}
         element["path"] = path
-        igraph_service.visualize_learning_path(path, counter)
+        igraph_service.visualize_learning_path(get_course_name_by_id(path), counter)
         element["visualization"] = f'/static/learning-path-{counter}.png'
         result.append(element.copy())
         counter += 1
     delete_user_need_lo(user_id)
 
     return result
+
+
+def map_list_dict_to_list(dict):
+    return dict.get('name')
+
+
+def get_list_name(list_dict):
+    return list(map(map_list_dict_to_list, list_dict))
+
+
+def get_course_name_by_id(set_course):
+    list_name = graph.run(query_get_course_name_by_id(set_course)).data()
+    list_name = get_list_name(list_name)
+    return list_name
