@@ -11,8 +11,8 @@ match(lo) where labels(lo)[0] in skill and not id(lo) in lo_list detach delete l
 // Remove label, relationship unnecessary
 match (c:Course)-[r]->(x)
 where type(r)="COLLABORATE_WITH" or type(r)="TEACH_IN" or type(r)="IS_IN" or type(r)="HAS_LEVEL" or type(r)="BELONG"
-delete r, x;
-match (n)-[r]->(c:Course) where type(r) = 'INCLUDE_COURSE' or type(r) = 'INSTRUCT_BY' delete r, n;
+detach delete r, x;
+match (n)-[r]->(c:Course) where type(r) = 'INCLUDE_COURSE' or type(r) = 'INSTRUCT_BY' detach delete r, n;
 // Upgrate property level of TEACH Relationship to 5
 match(c:Course)-[r]->(lo) where type(r) =~'TEACH_.*' and type(r) <> 'TEACH_IN'
 set r.Level = 5
