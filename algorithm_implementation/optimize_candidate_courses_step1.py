@@ -62,7 +62,6 @@ def is_inside_set_lo(set_lo, lo_dict):
     return False
 
 
-
 def is_provided(set_lo, lo_dict):
     for lo in set_lo:
         if type(lo) is list:
@@ -195,7 +194,8 @@ def get_list_candidate_courses_for_a_lo(lo_dict, user_lo_need, user_lo, mode, us
 
     for i in range(7 - mode):
         for course in course_lo:
-            if course.get('id') is not None and is_candidate_courses_a_LO(course.get('id'), lo_dict, user_lo_need, user_lo, i + mode, user_course_extra):
+            if course.get('id') is not None and is_candidate_courses_a_LO(course.get('id'), lo_dict, user_lo_need,
+                                                                          user_lo, i + mode, user_course_extra):
                 list_course_lo.append(course)
         if list_course_lo.__len__() > 0:
             return list_course_lo
@@ -278,7 +278,24 @@ def get_input_for_step2(user_id, mode, user_course_extra):
     for i in sets_courses:
         sets_courses_as_list.append(list(i))
 
-    return sets_courses
+    return list_candidates_filtered
 
-# for i in get_input_for_step2(4681, 1, []):
+
+# for i in get_input_for_step2(10, 1, []):
 #     print(i)
+from utilities.query_for_services import *
+def create_user_need_lo(user_id):
+    list_relationship_id = []
+    for query in query_create_user_need_lo(user_id):
+        result = graph.run(query).data()
+        # if result.__len__() > 0:
+        #     list_relationship_id.append(result[0].get('id'))
+    # print(list_relationship_id)
+
+
+def delete_user_need_lo(user_id):
+    graph.run(query_delete_relationship_user_need_lo(user_id))
+
+create_user_need_lo(10)
+# print(get_input_for_step2(10, 1, []))
+# delete_user_need_lo(10)

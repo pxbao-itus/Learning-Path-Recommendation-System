@@ -25,10 +25,11 @@ urlpatterns = [
     path('user/need', user_apis.get_lo_need_by_user),
     # url: http://localhost:8000/apis/user/create
     # method: POST
-    # body_example: {
-    #     "username": "Bob123",
-    #     "password": "123123",
-    #     "name": "Bob"
+    # {
+    #     "name": "bdv",
+    #     "email": "ssfsf@signal.com",
+    #     "cost": 1000,
+    #     "time": 0
     # }
     # response: {
     #      "status": "success" | "fail"

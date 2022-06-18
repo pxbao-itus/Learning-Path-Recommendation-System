@@ -48,11 +48,11 @@ def create_user_need_lo(user_id):
         #     list_relationship_id.append(result[0].get('id'))
     # print(list_relationship_id)
 
-
+# create_user_need_lo(5)
 def delete_user_need_lo(user_id):
     graph.run(query_delete_relationship_user_need_lo(user_id))
 
-
+# delete_user_need_lo(5)
 def get_learning_path(user_id):
     user = User(graph.run(query_get_user_info(user_id)).data()[0])
     delete_user_need_lo(user_id)

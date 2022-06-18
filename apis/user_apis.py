@@ -13,8 +13,8 @@ def create_user(request):
     user = {
         'name': body['name'],
         'email': body['email'],
-        'cost': body['cost'],
-        'time': body['time']
+        'cost': body['cost'] | 0,
+        'time': body['time'] | 0
     }
     result = user_service.create_user(user)
     if result.__len__() > 0:
