@@ -4,6 +4,7 @@ from py2neo import Graph
 from utilities import query_for_algorithm, query_algorithm_v2
 from constants.algorithm_constants import AlgorithmConstant
 from models.candidate import Candidate
+
 graph = Graph()
 
 
@@ -132,9 +133,16 @@ def get_candidate_for_all_lo(los, user_id):
     return list_candidate_all_los
 
 
+def get_input_for_step2(user_id):
+    return get_candidate_for_all_lo(get_user_lo_need(5), 5)
+
+# structure of input for step 2
+# [[obj, obj, obj], [obj, obj], [obj], [obj, obj, obj, obj, obj], ...]
+
+# structure of object view in Candidate class in models package
+
+
 # x = get_candidate_for_all_lo(get_user_lo_need(5), 5)
 # for candidate_list in x:
 #     for obj in candidate_list:
 #         print(obj.get_value())
-
-
