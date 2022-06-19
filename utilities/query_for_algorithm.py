@@ -6,6 +6,11 @@ def query_get_user_need_lo(user_id):
            f"WHERE ID(u) = {user_id} AND TYPE(r) =~ 'NEED_.*' " \
            f"RETURN id(k) as id, r.Level as level;"
 
+def query_get_user_need_lo_id(user_id):
+    return f"MATCH (u:User)-[r]->(k)" \
+           f"WHERE ID(u) = {user_id} AND TYPE(r) =~ 'NEED_.*' " \
+           f"RETURN collect(id(k)) as lo_list"
+
 
 # get set lo that user has and need
 def query_get_user_lo(user_id):
