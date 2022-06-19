@@ -16,7 +16,7 @@ class AlgorithmConstant:
 
     V2_LAMBDA = 0.5
     V2_ALPHA = 0.3
-    V2_OMEGA = 100
+    V2_OMEGA = 5
     V2_MUY = 10
 
     V2_W1 = 0.25

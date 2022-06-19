@@ -64,8 +64,7 @@ def add_new_label_for_courses_selected(courses):
 # remove label for courses
 def remove_label_selected():
     return 'MATCH (n:Selected)' \
-           'REMOVE n:Selected' \
-           'RETURN n.name, labels(n);'
+           'REMOVE n:Selected'
 
 
 # create relationship between courses selected
@@ -89,7 +88,7 @@ def create_sub_graph_from_list_courses(user_id):
            f'"{user_id}", ' \
            '"Selected", ' \
            '"SELECTED", ' \
-           '{nodeProperties: "id", relationshipProperties: "weight"})'
+           '{relationshipProperties: "weight"})'
 
 
 # remove sub graph
@@ -128,10 +127,10 @@ def find_target_node_inside_sub_graph():
 
 
 # find paths from source to target
-def find_paths_from_sources_to_targets(sources, targets, user_id, k):
+def find_paths_from_sources_to_targets(sources, targets, user_id,  k):
     return f'with {sources} as nodeSource, {targets} as nodeTarget ' \
            'MATCH (source:Selected), (target:Selected) ' \
-           'where id(source) in nodeSource and id(target) in nodeTarget ' \
+           f'where id(source) in nodeSource and id(target) in nodeTarget ' \
            f'CALL gds.shortestPath.yens.stream("{user_id}", ' \
            '{sourceNode: source, ' \
            'targetNode: target, ' \
@@ -145,5 +144,3 @@ def find_paths_from_sources_to_targets(sources, targets, user_id, k):
            'totalCost, ' \
            '[nodeId IN nodeIds | id(gds.util.asNode(nodeId))] AS nodeNames ' \
            'ORDER BY sourceNode, targetNode, totalCost DESC '
-
-

@@ -107,13 +107,17 @@ def get_learning_path_v2(user_id):
     # user = User(graph.run(query_get_user_info(user_id)).data()[0])
     # delete_user_need_lo(user_id)
     # create_user_need_lo(user_id)
-    path = get_final_result(user_id)
+    paths = get_final_result(user_id)
     result = []
     counter = 1
-    element = {}
-    element["path"] = path
-    igraph_service.visualize_learning_path_v2(path, counter)
-    element["visualization"] = f'/static/learning-path-{counter}.png'
-    result.append(element.copy())
-
+    for path in paths:
+        element = {}
+        element["path"] = path
+        igraph_service.visualize_learning_path_v2(path, counter)
+        element["visualization"] = f'/static/learning-path-{counter}.png'
+        result.append(element.copy())
+        counter = counter + 1
+    # delete_user_need_lo(user_id)
     return result
+
+# get_learning_path_v2(5)

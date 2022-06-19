@@ -1,3 +1,4 @@
+import sys
 from py2neo import Graph
 
 from utilities import query_for_algorithm, query_algorithm_v2
@@ -50,7 +51,8 @@ def find_target_nodes():
 
 
 def find_path_source_target(sources, targets, user_id):
-    return graph.run(query_algorithm_v2.find_paths_from_sources_to_targets(sources, targets, user_id, 10)).data()
+    return graph.run(
+        query_algorithm_v2.find_paths_from_sources_to_targets(sources, targets, user_id, 10)).data()
 
 
 def check_existed_path_in_paths(paths, path_checked):
@@ -81,20 +83,6 @@ def find_distinct_path(paths):
     return path_returned
 
 
-# def check_same_element_in_two_list(list1, list2):
-#     for element in list1:
-
-def get_target_common_source_path_two_element(paths, source, targets):
-    targets_return = []
-    for path in paths:
-        if source in path and path.__len__() == 2:
-            targets_return.append(path[1])
-    for target in targets_return:
-        paths.remove([source, target])
-        targets.remove(target)
-    return targets_return
-
-
 def add_list_to_list(native_list, added_list):
     for element in added_list:
         if element in native_list:
@@ -113,7 +101,10 @@ def is_common_node_in_two_paths(path1, path2):
 def get_common_node(path1, path2):
     for i in path1:
         if i in path2:
-            return i
+            if i == path1[0] or i == path2[0]:
+                continue
+            else:
+                return i
     return 0
 
 
@@ -124,6 +115,43 @@ def is_two_list_different(list1, list2):
         if list1[i] != list2[i]:
             return False
     return True
+
+
+def find_except_node(path_final):
+    except_node = []
+    for path in path_final:
+        except_node.extend(path)
+    return except_node
+
+
+def get_target_common_source_path_two_element(paths, source, targets):
+    targets_return = []
+    for path in paths:
+        if source in path and path.__len__() == 2:
+            targets_return.append(path[1])
+    targets_return = list(set(targets_return))
+    paths_removed = []
+    for target in targets_return:
+        paths.remove([source, target])
+        for path in paths:
+            if path.__len__() == 2 and path[1] == target:
+                paths_removed.append(path)
+            elif path[path.__len__() - 1] == target:
+                targets.append(path[path.__len__() - 2])
+                paths_removed.append(path)
+                paths.append(path[0:path.__len__() - 1])
+        targets.remove(target)
+    for path_removed in paths_removed:
+        paths.remove(path_removed)
+    paths_removed = []
+    for path in paths:
+        if path[0] == source:
+            targets.remove(path[path.__len__() - 1])
+            add_list_to_list(targets_return, path[1:path.__len__()])
+            paths_removed.append(path)
+    for path_removed in paths_removed:
+        paths.remove(path_removed)
+    return targets_return
 
 
 def handle_path(paths, path_check, hash_map, path_final, new_hash_map):
@@ -144,7 +172,6 @@ def handle_path(paths, path_check, hash_map, path_final, new_hash_map):
         paths.remove(path_check)
         return
     sources = []
-    # print(paths_have_common_node)
     for path_chosen in paths_have_common_node:
         sources.append(path_chosen[0])
     sources = list(set(sources))
@@ -164,10 +191,8 @@ def create_path_final(path_final, sources, targets, hash_map, user_id):
     for path in paths:
         if path.__len__() == 2:
             source = path[0]
-            path_added = get_target_common_source_path_two_element(paths, source, targets)
-            path_added.append(source)
-            path_added.extend(hash_map.get(source))
-            path_added.reverse()
+            targets_returned = get_target_common_source_path_two_element(paths, source, targets)
+            path_added = hash_map.get(source) + [source] + targets_returned
             path_final.append(path_added)
     for path in paths:
         handle_path(paths, path, hash_map, path_final, new_hash_map)
@@ -175,14 +200,31 @@ def create_path_final(path_final, sources, targets, hash_map, user_id):
 
 
 def get_final_result(user_id):
+    sys.setrecursionlimit(5000)
+    set_courses = step2.get_input_for_step3(user_id)
+    # set_courses = [[937, 4408, 2753, 4043, 4026, 2291, 2081, 3161, 4043, 975, 2291, 1233, 3334]]
+    paths = []
+    for set_course in set_courses:
+        add_new_label(set_course)
+        create_relationship_btw_courses(set_course)
+        create_sub_graph(user_id)
+        path_final = []
+        single_nodes = get_list_id(find_single_nodes())
+        for node in single_nodes:
+            path_final.append([node])
+        source_nodes = get_list_id(find_source_nodes())
+        target_nodes = get_list_id(find_target_nodes())
+        hash_map = {}
+        for node in source_nodes:
+            hash_map[node] = []
+        create_path_final(path_final, source_nodes, target_nodes, hash_map, user_id)
+        paths.append(path_final.copy())
+        remove_sub_graph(user_id)
+        remove_label()
+        remote_relationship_btw_courses()
+    return paths
 
-    path_final = [get_list_id(find_single_nodes())]
-    source_nodes = get_list_id(find_source_nodes())
-    target_nodes = get_list_id(find_target_nodes())
-    hash_map = {}
-    for node in source_nodes:
-        hash_map[node] = []
-    create_path_final(path_final, source_nodes, target_nodes, hash_map, user_id)
-    return path_final
 
 # print(get_final_result(5))
+# get_final_result(5)
+# print(sys.getrecursionlimit())
