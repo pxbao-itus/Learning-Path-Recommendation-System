@@ -67,7 +67,7 @@ def create_temporary_relationship(user_id, user_lo_current_require):
 
 def delete_temporary_relationship_created(user_id, user_lo_current_require):
     list_lo = list(map(map_list_dict_to_list, user_lo_current_require))
-    graph.run(query_to_remove_temporary_relationship_created(user_id, list_lo))
+    graph.run(query_to_remove_temporary_relationship_created(user_id))
 
 
 # create descartes set courses

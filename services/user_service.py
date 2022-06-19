@@ -100,3 +100,4 @@ def get_lo_need_by_user(user_id):
         if check:
             lo_user_need.append(lo_career.copy())
     return lo_user_need
+

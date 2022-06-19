@@ -11,3 +11,5 @@ class AlgorithmConstant:
     F4 = 1
 
     OMEGA = 10
+
+    V2_MUY = 10
