@@ -47,15 +47,18 @@ def finding_optimization_courses(all_set_of_candidate_course,user):
 
     # Main Process
     optimized_population = run_genetic_algorithm(all_set_of_candidate_course,user)
+    optimized_set_of_course = []
+    for individual in optimized_population:
+        optimized_set_of_course.append(get_set_of_course_from_individual(individual))
     if not optimized_population:
         print("Can not find set of course from running genetic algorithm")
         return
     if(user_need_time == 0 and user_need_cost == 0):
-        filter_set_of_course = optimized_population
+        filter_set_of_course = optimized_set_of_course
     elif(user_need_time != 0):
-        filter_set_of_course = user_filter_time(user_need_time,optimized_population)
+        filter_set_of_course = user_filter_time(user_need_time,optimized_set_of_course)
     elif(user_need_cost != 0):
-        filter_set_of_course = user_filter_cost(user_need_cost,optimized_population)
+        filter_set_of_course = user_filter_cost(user_need_cost,optimized_set_of_course)
 
     # Return
     return filter_set_of_course[0:AlgorithmConstant.V2_OMEGA]
@@ -223,17 +226,17 @@ def calculate_sum_cost_of_individual(set_of_course):
 def get_individual_by_index(selected_population_dict, index, native_population):
     return native_population[index]
 
-def user_filter_time(user_need_time,optimized_population):
+def user_filter_time(user_need_time,optimized_set_of_course):
     filter_set_of_course = []
-    for set_of_course in optimized_population:
+    for set_of_course in optimized_set_of_course:
         sum_time_set_of_course = calculate_sum_time_of_individual(set_of_course)
         if(user_need_time >= sum_time_set_of_course):
             filter_set_of_course.append(set_of_course)
     return filter_set_of_course
 
-def user_filter_cost(user_need_cost,optimized_population):
+def user_filter_cost(user_need_cost,optimized_set_of_course):
     filter_set_of_course = []
-    for set_of_course in optimized_population:
+    for set_of_course in optimized_set_of_course:
         sum_cost_set_of_course = calculate_sum_cost_of_individual(set_of_course)
         if (user_need_cost >= sum_cost_set_of_course):
             filter_set_of_course.append(set_of_course)
