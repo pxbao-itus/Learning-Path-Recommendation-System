@@ -1,7 +1,7 @@
 from py2neo import Graph
 
 from utilities import query_for_algorithm, query_algorithm_v2
-from constants.algorithm_constants import AlgorithmConstant
+from algorithm_v2 import step2, step1
 
 graph = Graph()
 
@@ -160,8 +160,6 @@ def create_path_final(path_final, sources, targets, hash_map, user_id):
     if sources.__len__() == 0:
         return
     paths = find_distinct_path(find_path_source_target(sources, targets, user_id))
-    # paths = [[272, 282, 316, 323], [287, 262], [302, 311, 316, 323], [335, 350, 403], [335, 350, 427],
-    #          [361, 340, 350, 403], [361, 340, 350, 427]]
     new_hash_map = {}
     for path in paths:
         if path.__len__() == 2:
@@ -177,6 +175,7 @@ def create_path_final(path_final, sources, targets, hash_map, user_id):
 
 
 def get_final_result(user_id):
+
     path_final = [get_list_id(find_single_nodes())]
     source_nodes = get_list_id(find_source_nodes())
     target_nodes = get_list_id(find_target_nodes())
@@ -185,6 +184,5 @@ def get_final_result(user_id):
         hash_map[node] = []
     create_path_final(path_final, source_nodes, target_nodes, hash_map, user_id)
     return path_final
-
 
 # print(get_final_result(5))

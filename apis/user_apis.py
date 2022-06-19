@@ -53,5 +53,5 @@ def get_lo_need_by_user(request):
 
 
 def get_learning_path(request):
-    lb = user_service.get_learning_path(int(request.GET.get("id")))
+    lb = user_service.get_learning_path_v2(int(request.GET.get("id")))
     return JsonResponse(lb, safe=False)

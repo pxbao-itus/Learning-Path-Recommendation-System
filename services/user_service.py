@@ -5,6 +5,7 @@ from algorithm_implementation import build_learning_path_step4, evaluate_set_cou
 from models.user import User
 from utilities.query_for_services import *
 from services import igraph_service
+from algorithm_v2.step3 import *
 
 graph = Graph()
 
@@ -65,7 +66,7 @@ def get_learning_path(user_id):
     for path in lb:
         element = {}
         element["path"] = path
-        igraph_service.visualize_learning_path(get_course_name_by_id(path), counter)
+        igraph_service.visualize_learning_path_v1(get_course_name_by_id(path), counter)
         element["visualization"] = f'/static/learning-path-{counter}.png'
         result.append(element.copy())
         counter += 1
@@ -101,3 +102,18 @@ def get_lo_need_by_user(user_id):
             lo_user_need.append(lo_career.copy())
     return lo_user_need
 
+
+def get_learning_path_v2(user_id):
+    # user = User(graph.run(query_get_user_info(user_id)).data()[0])
+    # delete_user_need_lo(user_id)
+    # create_user_need_lo(user_id)
+    path = get_final_result(user_id)
+    result = []
+    counter = 1
+    element = {}
+    element["path"] = path
+    igraph_service.visualize_learning_path_v2(path, counter)
+    element["visualization"] = f'/static/learning-path-{counter}.png'
+    result.append(element.copy())
+
+    return result
