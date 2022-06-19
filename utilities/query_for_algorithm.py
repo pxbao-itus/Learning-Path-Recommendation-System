@@ -42,7 +42,8 @@ def query_get_rating_course(course_id):
 
 # get set courses provided lo
 def query_get_courses_provided_a_lo(lo_id, level):
-    return f'MATCH (lo)<-[r]-(c:Course) WHERE id(lo) = {lo_id} and r.Level >= {level} and type(r)=~"TEACH.*" return id(c) as id'
+    return f'MATCH (lo)<-[r]-(c:Course) WHERE id(lo) = {lo_id} and r.Level >= {level} ' \
+           f'and type(r)=~"TEACH.*" return id(c) as id'
 
 
 # calculate similarity between a Course and a User
@@ -86,9 +87,8 @@ def query_to_create_temporary_relationship_user_lo(user_id, list_lo):
            'CREATE (a)-[r:NEED_TEMPORARY {Level:1}]->(b);'
 
 
-def query_to_remove_temporary_relationship_created(user_id, list_lo):
-    return f'WITH {list_lo} as list ' \
-           f'MATCH (a:User)-[r]-> (b) WHERE id(a)={user_id} AND id(b) in list ' \
+def query_to_remove_temporary_relationship_created(user_id):
+    return f'MATCH (a:User)-[r]-> (b) WHERE id(a)={user_id} AND type(r) = "NEED_TEMPORARY" ' \
            'DELETE r'
 
 

@@ -48,9 +48,11 @@ def create_user_need_lo(user_id):
         #     list_relationship_id.append(result[0].get('id'))
     # print(list_relationship_id)
 
+
 # create_user_need_lo(5)
 def delete_user_need_lo(user_id):
     graph.run(query_delete_relationship_user_need_lo(user_id))
+
 
 # delete_user_need_lo(5)
 def get_learning_path(user_id):
@@ -98,3 +100,4 @@ def get_lo_need_by_user(user_id):
         if check:
             lo_user_need.append(lo_career.copy())
     return lo_user_need
+
