@@ -134,7 +134,7 @@ def get_candidate_for_all_lo(los, user_id):
 
 
 def get_input_for_step2(user_id):
-    return get_candidate_for_all_lo(get_user_lo_need(5), 5)
+    return get_candidate_for_all_lo(get_user_lo_need(user_id), user_id)
 
 # structure of input for step 2
 # [[obj, obj, obj], [obj, obj], [obj], [obj, obj, obj, obj, obj], ...]

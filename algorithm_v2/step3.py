@@ -91,6 +91,18 @@ def add_list_to_list(native_list, added_list):
             native_list.append(element)
 
 
+def add_list_to_front_list(native_list, added_list):
+    copy_native_list = native_list.copy()
+    native_list.clear()
+    native_list.extend(added_list)
+    for element in copy_native_list:
+        if element in native_list:
+            native_list.remove(element)
+            native_list.append(element)
+        else:
+            native_list.append(element)
+
+
 def is_common_node_in_two_paths(path1, path2):
     for i in path1:
         if i in path2:
@@ -126,16 +138,22 @@ def find_except_node(path_final):
 
 def get_target_common_source_path_two_element(paths, source, targets):
     targets_return = []
+    sources_return = []
     for path in paths:
         if source in path and path.__len__() == 2:
-            targets_return.append(path[1])
-    targets_return = list(set(targets_return))
+            add_list_to_list(targets_return, [path[1]])
     paths_removed = []
     for target in targets_return:
-        paths.remove([source, target])
+        if [source, target] in paths:
+            paths.remove([source, target])
         for path in paths:
             if path.__len__() == 2 and path[1] == target:
                 paths_removed.append(path)
+                add_list_to_list(sources_return, [path[0]])
+            elif path[path.__len__() - 1] == target and path[0] == source:
+                targets.append(path[path.__len__() - 2])
+                paths_removed.append(path)
+                paths.append(path[1:path.__len__() - 1])
             elif path[path.__len__() - 1] == target:
                 targets.append(path[path.__len__() - 2])
                 paths_removed.append(path)
@@ -143,15 +161,22 @@ def get_target_common_source_path_two_element(paths, source, targets):
         targets.remove(target)
     for path_removed in paths_removed:
         paths.remove(path_removed)
-    paths_removed = []
+    paths_removed.clear()
     for path in paths:
         if path[0] == source:
-            targets.remove(path[path.__len__() - 1])
+            target_removed = path[path.__len__() - 1]
+            targets.remove(target_removed)
+            for inner_path in paths:
+                if inner_path[0] != source and target_removed in inner_path and inner_path.__len__() > 2 and not \
+                        inner_path[0] in targets_return:
+                    paths.append(inner_path[0:inner_path.__len__() - 1])
+                    targets.append(inner_path[inner_path.__len__() - 2])
+                    paths_removed.append(inner_path)
             add_list_to_list(targets_return, path[1:path.__len__()])
             paths_removed.append(path)
     for path_removed in paths_removed:
         paths.remove(path_removed)
-    return targets_return
+    return sources_return + targets_return
 
 
 def handle_path(paths, path_check, hash_map, path_final, new_hash_map):
@@ -179,7 +204,8 @@ def handle_path(paths, path_check, hash_map, path_final, new_hash_map):
     for source in sources:
         path_added.extend(hash_map.get(source))
     for path in paths_have_common_node:
-        add_list_to_list(path_added, path[0:path.index(common_node)])
+        if common_node != 0 and common_node in path:
+            add_list_to_list(path_added, path[0:path.index(common_node)])
     new_hash_map[common_node] = path_added
 
 
@@ -200,11 +226,10 @@ def create_path_final(path_final, sources, targets, hash_map, user_id):
 
 
 def get_final_result(user_id):
-    sys.setrecursionlimit(5000)
     set_courses = step2.get_input_for_step3(user_id)
-    # set_courses = [[937, 4408, 2753, 4043, 4026, 2291, 2081, 3161, 4043, 975, 2291, 1233, 3334]]
     paths = []
     for set_course in set_courses:
+        set_course = list(set(set_course))
         add_new_label(set_course)
         create_relationship_btw_courses(set_course)
         create_sub_graph(user_id)
@@ -225,6 +250,6 @@ def get_final_result(user_id):
     return paths
 
 
-# print(get_final_result(5))
+# print(get_final_result(13))
 # get_final_result(5)
-# print(sys.getrecursionlimit())
+# print(step2.get_input_for_step3(13))

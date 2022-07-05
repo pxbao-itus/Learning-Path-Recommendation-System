@@ -328,8 +328,5 @@ def get_input_for_step3(user_id):
     return finding_optimization_courses(all_set_of_candidate_course, user)
 
 
-def main():
-    result = get_input_for_step3(5)
-    print(result)
 
-# main()
+
