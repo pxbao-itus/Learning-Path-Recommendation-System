@@ -11,16 +11,38 @@ def create_user(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     user = {
-        'name': body['name'],
-        'email': body['email'],
-        'cost': body['cost'] | 0,
-        'time': body['time'] | 0
+        'name': "anonymous",
+        'email': "anonymous",
+        'cost': int(body['cost']) | 0,
+        'time': int(body['time']) | 0
     }
-    result = user_service.create_user(user)
+    result = user_service.create_user(user, body['id'])
     if result.__len__() > 0:
         return JsonResponse(status=200, data=result[0])
     else:
         return JsonResponse(status=400, data={"message": "failed"})
+
+
+def register(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    result = user_service.register(body['name'], body['email'])
+    if result.__len__() > 0:
+        return JsonResponse(status=200, data=result[0])
+    else:
+        return JsonResponse(status=400, data={"message": "failed"})
+
+
+def update(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    user_service.update(body['user'], body['career'])
+    return JsonResponse(status=200, data={"msg": "success"})
+
+
+def login(request):
+    user_id = user_service.login(request.GET.get("email"))
+    return JsonResponse(user_id, safe=False)
 
 
 def get_user_info(request):
@@ -55,3 +77,9 @@ def get_lo_need_by_user(request):
 def get_learning_path(request):
     lb = user_service.get_learning_path_v2(int(request.GET.get("id")))
     return JsonResponse(lb, safe=False)
+
+
+def get_lp_info(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    return JsonResponse(user_service.get_info_lp(body['courses'], body['user']), safe=False)

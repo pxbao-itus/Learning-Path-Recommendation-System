@@ -10,6 +10,7 @@ urlpatterns = [
     path('career/lo', career_apis.get_lo_need),
 
     # Path for Learning Object
+    path('lo/all', learning_object_apis.get_search_lo),
     path('lo/language/', learning_object_apis.get_all_programing_language),
     path('lo/knowledge', learning_object_apis.get_all_knowledge),
     path('lo/tool', learning_object_apis.get_all_tool),
@@ -22,7 +23,16 @@ urlpatterns = [
     path('course', course_apis.get_info_course),
 
     # Path for user
+    path('user/login', user_apis.login),
+    path('user/register', user_apis.register),
     path('user/need', user_apis.get_lo_need_by_user),
+    path('user/career/update', user_apis.update),
+    path('user/has', learning_object_apis.get_lo_has),
+    path('user/has/create', learning_object_apis.create_lo_has),
+    path('user/has/delete', learning_object_apis.delete_lo_has),
+    path('user/update', user_apis.create_user),
+    path('user/lp', user_apis.get_lp_info),
+
     # url: http://localhost:8000/apis/user/create
     # method: POST
     # {
