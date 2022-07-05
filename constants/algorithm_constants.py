@@ -12,14 +12,15 @@ class AlgorithmConstant:
     F4 = 1
 
     # loop times of genetic algorithm
-    V2_GENETIC_LOOP_TIMES = 20
+    V2_GENETIC_LOOP_TIMES = 32
 
-    V2_LAMBDA = 0.5
+    V2_LAMBDA = 0.3
     V2_ALPHA = 0.3
-    V2_OMEGA = 5
+    V2_OMEGA = 10
     V2_MUY = 10
 
-    V2_W1 = 0.25
-    V2_W2 = 0.25
-    V2_W3 = 0.25
-    V2_W4 = 0.25
+    V2_W1 = 0.5
+    V2_W2 = 0.15
+    V2_W3 = 0.2
+    V2_W4 = 0.15
+
