@@ -39,10 +39,13 @@ def visualize_learning_path_v2(path_final, index):
             counter = counter + 1
     i_graph.vs["id"] = vertexs
     i_graph.add_edges(edges)
-
+    max_size = 0
+    for sub_path in path_final:
+        if max_size < sub_path.__len__():
+            max_size = sub_path.__len__()
     layout = i_graph.layout_reingold_tilford()
     visual_style = {"vertex_size": 50, "layout": layout, "vertex_color": "orange", "vertex_label": i_graph.vs["id"],
-                    "edge_width": 3, "bbox": (700, 700), "margin": 100}
+                    "edge_width": 2, "bbox": (path_final.__len__() * 50 + 100, max_size * 70 + 100), "margin": 50}
     file_name = f"static/learning-path-{index}.png"
     igraph.plot(i_graph, file_name, **visual_style)
 

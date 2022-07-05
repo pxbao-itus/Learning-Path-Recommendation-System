@@ -6,12 +6,35 @@ from models.user import User
 from utilities.query_for_services import *
 from services import igraph_service
 from algorithm_v2.step3 import *
+from algorithm_v2.step2 import *
 
 graph = Graph()
 
 
-def create_user(user):
-    return graph.run(query_create_user(user.get('name'), user.get('email'), user.get('cost'), user.get('time'))).data()
+def create_user(user, user_id):
+    return graph.run(query_create_user(user_id, user.get('cost'), user.get('time'))).data()
+
+
+def register(name, email):
+    result = login(email)
+    print(result)
+    if result.get("id") == 0:
+        return graph.run(query_register(name, email)).data()
+    else:
+        return {}
+
+
+def update(user_id, career_id):
+    graph.run(query_update_career(user_id, career_id))
+    graph.run(query_create_objective_career(user_id, career_id))
+
+
+def login(email):
+    result = graph.run(query_get_id_by_email(email)).data()
+    if result.__len__() > 0:
+        return result[0]
+    else:
+        return {"id": 0}
 
 
 def get_user_info(user_id):
@@ -19,10 +42,9 @@ def get_user_info(user_id):
     if result.__len__() > 0:
         career = graph.run(query_get_objective(user_id)).data()
         if career.__len__() > 0:
-            print(career)
-            result[0]['career'] = career[0].get('id')
+            result[0]['career'] = career[0]
         else:
-            result[0]['career'] = 0
+            result[0]['career'] = {}
         return User(result[0])
     else:
         return False
@@ -120,4 +142,16 @@ def get_learning_path_v2(user_id):
     delete_user_need_lo(user_id)
     return result
 
-# get_learning_path_v2(5)
+
+def get_info_lp(courses, user_id):
+    delete_user_need_lo(user_id)
+    create_user_need_lo(user_id)
+    result = {'course': calculate_number_of_course(courses),
+              'lor': calculate_number_of_redundant_LO(courses, get_lo_need_by_user(user_id)),
+              'lod': calculate_number_of_overlap_LO(courses),
+              'time': calculate_sum_time_of_individual(courses),
+              'cost': calculate_sum_cost_of_individual(courses)}
+    delete_user_need_lo(user_id)
+    return result
+
+# print(get_learning_path_v2(13))
