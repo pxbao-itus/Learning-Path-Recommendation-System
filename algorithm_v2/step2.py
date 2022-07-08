@@ -72,7 +72,16 @@ def finding_optimization_courses(all_set_of_candidate_course, user):
         filter_set_of_course = user_filter_cost(user_need_cost, optimized_set_of_course)
 
     # Return
-    return filter_set_of_course[0:AlgorithmConstant.V2_OMEGA]
+    returned = []
+    counter = 0
+    for element in filter_set_of_course:
+        element.sort()
+        if not element in returned:
+            returned.append(element)
+            counter += 1
+        if counter == AlgorithmConstant.V2_OMEGA:
+            break
+    return returned
 
 
 # Private function
@@ -325,7 +334,19 @@ def get_input_for_step3(user_id):
         print("cannot find all_set_of_candidate_course")
     user = User(nodes.get(user_id))
     user.id = user_id
-    return finding_optimization_courses(all_set_of_candidate_course, user)
+    result = finding_optimization_courses(all_set_of_candidate_course, user)
+    temp = []
+    for courses in result:
+        element = {
+            'courses': courses,
+            'score': calculate_score_for_individual(courses, user)
+        }
+        temp.append(element)
+    newlist = sorted(temp, key=lambda d: d['score'])
+    returned = []
+    for element in newlist:
+        returned.append(element.get('courses'))
+    return returned
 
 
 

@@ -154,4 +154,3 @@ def get_info_lp(courses, user_id):
     delete_user_need_lo(user_id)
     return result
 
-# print(get_learning_path_v2(13))

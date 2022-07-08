@@ -6,6 +6,7 @@ def query_get_user_need_lo(user_id):
            f"WHERE ID(u) = {user_id} AND TYPE(r) =~ 'NEED_.*' " \
            f"RETURN id(k) as id, r.Level as level;"
 
+
 def query_get_user_need_lo_id(user_id):
     return f"MATCH (u:User)-[r]->(k)" \
            f"WHERE ID(u) = {user_id} AND TYPE(r) =~ 'NEED_.*' " \
@@ -24,7 +25,7 @@ def query_get_lo_provided_by_course(course_id):
     query = 'MATCH (lo) <- [r2] - (c:Course) ' \
             f'WHERE id(c) = {course_id} ' \
             f'AND TYPE(r2) =~ "TEACH_.*" ' \
-            f'RETURN id(lo) as id, r2.Level as level'
+            f'RETURN id(lo) as id, lo.value as name, r2.Level as level'
     return query
 
 
@@ -71,7 +72,7 @@ def query_calculate_similarity_overlap(user_id, course_id):
 def query_lo_require_a_course(course_id):
     return 'MATCH (c:Course)-[r]->(lo) ' \
            f'WHERE id(c)={course_id} AND TYPE(r)=~"REQUIRE_.*" ' \
-           'RETURN id(lo) AS id, r.Level AS level'
+           'RETURN id(lo) AS id, lo.value as name, r.Level AS level'
 
 
 def query_to_get_list_lo_provided_by_set_course(set_course_id):

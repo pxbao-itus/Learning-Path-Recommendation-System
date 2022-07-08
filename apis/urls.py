@@ -18,8 +18,8 @@ urlpatterns = [
     path('lo/framework', learning_object_apis.get_all_framework),
 
     # Path for Course
-    path('course/need/lo', course_apis.get_lo_provided_by_course),
-    path('course/require/lo', course_apis.get_lo_required_by_course),
+    path('course/provided/lo', course_apis.get_lo_provided_by_course),
+    path('course/required/lo', course_apis.get_lo_required_by_course),
     path('course', course_apis.get_info_course),
 
     # Path for user

@@ -49,5 +49,4 @@ def visualize_learning_path_v2(path_final, index):
     file_name = f"static/learning-path-{index}.png"
     igraph.plot(i_graph, file_name, **visual_style)
 
-
 # visualize_learning_path_v2([[244], [287, 262], [282, 272, 311, 302, 316, 323], [335, 340, 361, 350, 427, 403]], 1)

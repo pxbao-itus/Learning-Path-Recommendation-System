@@ -158,7 +158,8 @@ def get_target_common_source_path_two_element(paths, source, targets):
                 targets.append(path[path.__len__() - 2])
                 paths_removed.append(path)
                 paths.append(path[0:path.__len__() - 1])
-        targets.remove(target)
+        if target in targets:
+            targets.remove(target)
     for path_removed in paths_removed:
         paths.remove(path_removed)
     paths_removed.clear()
@@ -192,8 +193,8 @@ def handle_path(paths, path_check, hash_map, path_final, new_hash_map):
 
     if paths_have_common_node.__len__() == 1:
         path_added = hash_map.get(path_check[0])
-        path_added.append(path_check)
-        path_final.extend(path_added)
+        path_added.extend(path_check)
+        path_final.append(path_added)
         paths.remove(path_check)
         return
     sources = []
@@ -212,6 +213,12 @@ def handle_path(paths, path_check, hash_map, path_final, new_hash_map):
 def create_path_final(path_final, sources, targets, hash_map, user_id):
     if sources.__len__() == 0:
         return
+    for target in targets:
+        if is_in_path_final(target, path_final):
+            targets.remove(target)
+    for source in sources:
+        if is_in_path_final(source, path_final):
+            sources.remove(source)
     paths = find_distinct_path(find_path_source_target(sources, targets, user_id))
     new_hash_map = {}
     for path in paths:
@@ -230,6 +237,8 @@ def get_final_result(user_id):
     paths = []
     for set_course in set_courses:
         set_course = list(set(set_course))
+        remove_label()
+        remote_relationship_btw_courses()
         add_new_label(set_course)
         create_relationship_btw_courses(set_course)
         create_sub_graph(user_id)
@@ -250,6 +259,12 @@ def get_final_result(user_id):
     return paths
 
 
-# print(get_final_result(13))
+def is_in_path_final(node, path_final):
+    for outer in path_final:
+        for inner in outer:
+            if node == inner:
+                return True
+    return False
+# get_final_result(52)
 # get_final_result(5)
 # print(step2.get_input_for_step3(13))

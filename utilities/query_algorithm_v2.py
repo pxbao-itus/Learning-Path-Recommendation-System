@@ -73,7 +73,7 @@ def create_relationship_btw_courses_selected(courses):
            'match (c:Course)-[r]->(lo)<-[r1]-(c1:Course) ' \
            'where type(r) =~"REQUIRE.*" and type(r1) =~"TEACH.*"  and id(c) in courses ' \
            'and id(c1) in courses and id(c) <> id(c1) ' \
-           'MERGE (c)-[:SELECTED{weight: 1}]->(c1); '
+           'MERGE (c1)-[:SELECTED{weight: 1}]->(c); '
 
 
 # remove relationship btw courses
