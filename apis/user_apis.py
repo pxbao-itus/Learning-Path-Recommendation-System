@@ -83,3 +83,4 @@ def get_lp_info(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     return JsonResponse(user_service.get_info_lp(body['courses'], body['user']), safe=False)
+

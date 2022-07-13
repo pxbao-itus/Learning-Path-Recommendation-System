@@ -3,6 +3,7 @@ from py2neo import Graph
 
 from utilities import query_for_algorithm, query_algorithm_v2
 from algorithm_v2 import step2, step1
+import time
 
 graph = Graph()
 
@@ -150,11 +151,11 @@ def get_target_common_source_path_two_element(paths, source, targets):
             if path.__len__() == 2 and path[1] == target:
                 paths_removed.append(path)
                 add_list_to_list(sources_return, [path[0]])
-            elif path[path.__len__() - 1] == target and path[0] == source:
+            elif path.__len__() >= 1 and path[path.__len__() - 1] == target and path[0] == source:
                 targets.append(path[path.__len__() - 2])
                 paths_removed.append(path)
                 paths.append(path[1:path.__len__() - 1])
-            elif path[path.__len__() - 1] == target:
+            elif path.__len__() - 1 >= 0 and path[path.__len__() - 1] == target:
                 targets.append(path[path.__len__() - 2])
                 paths_removed.append(path)
                 paths.append(path[0:path.__len__() - 1])
@@ -164,7 +165,7 @@ def get_target_common_source_path_two_element(paths, source, targets):
         paths.remove(path_removed)
     paths_removed.clear()
     for path in paths:
-        if path[0] == source:
+        if path.__len__() > 0 and path[0] == source:
             target_removed = path[path.__len__() - 1]
             targets.remove(target_removed)
             for inner_path in paths:
@@ -231,14 +232,20 @@ def create_path_final(path_final, sources, targets, hash_map, user_id):
         handle_path(paths, path, hash_map, path_final, new_hash_map)
     create_path_final(path_final, list(new_hash_map.keys()), targets, new_hash_map, user_id)
 
-
+import time
 def get_final_result(user_id):
+    start_step3 = time.time()
     set_courses = step2.get_input_for_step3(user_id)
+    print(set_courses)
     paths = []
     for set_course in set_courses:
         set_course = list(set(set_course))
         remove_label()
         remote_relationship_btw_courses()
+        try:
+            remove_sub_graph(user_id)
+        except:
+            print("except step 3")
         add_new_label(set_course)
         create_relationship_btw_courses(set_course)
         create_sub_graph(user_id)
@@ -256,6 +263,7 @@ def get_final_result(user_id):
         remove_sub_graph(user_id)
         remove_label()
         remote_relationship_btw_courses()
+    print(time.time() - start_step3)
     return paths
 
 

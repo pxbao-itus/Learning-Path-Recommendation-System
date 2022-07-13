@@ -114,9 +114,11 @@ def list_to_list_of_list(list_single):
         list_of_list.append([single])
     return list_of_list
 
+import time
 
 # get candidate courses for each lo
 def get_candidate_for_all_lo(los, user_id):
+    start = time.time()
     list_candidate_all_los = []
     for lo in los:
         complete_candidate_courses = []
@@ -130,19 +132,11 @@ def get_candidate_for_all_lo(los, user_id):
                 content.extend(inner_course)
             candidate_with_object.append(Candidate(content, lo.get('id')))
         list_candidate_all_los.append(candidate_with_object)
+    print(time.time() - start)
     return list_candidate_all_los
 
 
 def get_input_for_step2(user_id):
     return get_candidate_for_all_lo(get_user_lo_need(user_id), user_id)
 
-# structure of input for step 2
-# [[obj, obj, obj], [obj, obj], [obj], [obj, obj, obj, obj, obj], ...]
 
-# structure of object view in Candidate class in models package
-
-
-# x = get_candidate_for_all_lo(get_user_lo_need(5), 5)
-# for candidate_list in x:
-#     for obj in candidate_list:
-#         print(obj.get_value())

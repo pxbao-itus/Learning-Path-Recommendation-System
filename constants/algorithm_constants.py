@@ -12,7 +12,7 @@ class AlgorithmConstant:
     F4 = 1
 
     # loop times of genetic algorithm
-    V2_GENETIC_LOOP_TIMES = 10
+    V2_GENETIC_LOOP_TIMES = 1
 
     V2_LAMBDA = 0.3
     V2_ALPHA = 0.3

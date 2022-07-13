@@ -321,8 +321,9 @@ def get_set_of_course_from_individual(individual):
             return
     return list(list_set)
 
-
+import time
 def get_input_for_step3(user_id):
+    start_step2 = time.time()
     all_set_of_candidate_course = []
     sets_of_course = step1.get_input_for_step2(user_id)
     for set_of_course in sets_of_course:
@@ -346,6 +347,7 @@ def get_input_for_step3(user_id):
     returned = []
     for element in newlist:
         returned.append(element.get('courses'))
+    print(time.time() - start_step2)
     return returned
 
 
